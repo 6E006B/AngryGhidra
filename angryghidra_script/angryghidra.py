@@ -125,6 +125,7 @@ def main(file):
 
     simgr.run()
 
+    solution = {}
     if simgr.found:
         found_path = simgr.found[0]
 
@@ -135,32 +136,34 @@ def main(file):
             for address in addresses:
                 win_sequence += hex(address) + ","
         win_sequence = win_sequence[:-1]
-        print("Trace:" + win_sequence)
+        solution["trace"] = win_sequence
 
         if len(argv) > 1:
+            solution["argv"] = []
             for i in range(1, len(argv)):
-                print("argv[{id}] = {solution}".format(id=i, solution=found_path.solver.eval(argv[i], cast_to=bytes)))
+                solution["argv"].append(str(found_path.solver.eval(argv[i], cast_to=bytes)))
 
         if "Memory" in locals() and len(Memory) != 0:
+            solution["memory"] = {}
             for address, length in Memory.items():
-                print("{addr} = {value}".format(addr=hex(address),
-                                                value=found_path.solver.eval(found_path.memory.load(address, length),
-                                                                             cast_to=bytes)))
+                solution["memory"][hex(address)] = str(found_path.solver.eval(found_path.memory.load(address, length),
+                                                                          cast_to=bytes))
 
         if len(SYMVECTORS) > 0:
+            solution["symvectors"] = []
             for SV in SYMVECTORS:
-                print(found_path.solver.eval(SV, cast_to=bytes))
+                solution["symvectors"].append(str(found_path.solver.eval(SV, cast_to=bytes)))
 
         found_stdins = found_path.posix.stdin.content
         if len(found_stdins) > 0:
+            solution["stdin"] = {}
             std_id = 1
             for stdin in found_stdins:
-                print(
-                    "stdin[{id}] = {solution}".format(id=std_id,
-                                                      solution=found_path.solver.eval(stdin[0], cast_to=bytes)))
+                solution["stdin"][std_id] = str(found_path.solver.eval(stdin[0], cast_to=bytes))
                 std_id += 1
-    else:
-        print("")
+        if found_path.posix.stdout.content:
+            solution["stdout"] = found_path.posix.dumps(1).decode('utf8')
+    print(json.dumps(solution))
     return
 
 
