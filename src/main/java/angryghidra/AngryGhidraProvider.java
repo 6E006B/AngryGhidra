@@ -115,6 +115,7 @@ public class AngryGhidraProvider extends ComponentProvider {
     private ArrayList < JTextField > TFoutputFinds;
     private ArrayList < JTextField > TFoutputAvoids;
     private JTextField TFOutputFind1;
+    private JTextField TFOutputAvoid1;
     private JTextArea OutputSolutionArea;
     private JScrollPane scrollOutputSolution;
     private int GuiOutputFindCounter;
@@ -1156,6 +1157,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         			.addComponent(OutputSolutionArea, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         			.addGap(54))
         );
+
         GridBagLayout gbl_OutputFindPanel = new GridBagLayout();
         gbl_OutputFindPanel.columnWidths = new int[] {
             0,
@@ -1248,6 +1250,101 @@ public class AngryGhidraProvider extends ComponentProvider {
                 });
                 OutputFindPanel.repaint();
                 OutputFindPanel.revalidate();
+            }
+        });
+
+        GridBagLayout gbl_OutputAvoidPanel = new GridBagLayout();
+        gbl_OutputAvoidPanel.columnWidths = new int[] {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        };
+        gbl_OutputAvoidPanel.rowHeights = new int[] {
+            0
+        };
+        gbl_OutputAvoidPanel.columnWeights = new double[] {
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            Double.MIN_VALUE
+        };
+        gbl_OutputAvoidPanel.rowWeights = new double[] {
+            0.0
+        };
+        OutputAvoidPanel.setLayout(gbl_OutputAvoidPanel);
+
+        addButton = new JButton("");
+        gbc_addButton = new GridBagConstraints();
+        gbc_addButton.anchor = GridBagConstraints.NORTH;
+        gbc_addButton.fill = GridBagConstraints.HORIZONTAL;
+        gbc_addButton.insets = new Insets(0, 0, 0, 5);
+        gbc_addButton.gridx = 0;
+        gbc_addButton.gridy = 0;
+        gbc_addButton.weighty = 0.1;
+        OutputAvoidPanel.add(addButton, gbc_addButton);
+        addButton.setBorder(null);
+        addButton.setContentAreaFilled(false);
+        addButton.setIcon(Addicon);
+
+        TFOutputAvoid1 = new JTextField();
+        TFOutputAvoid1.setBorder(Classic_border);
+        GridBagConstraints gbc_TFOutputAvoid1 = new GridBagConstraints();
+        gbc_TFOutputAvoid1.insets = new Insets(0, 0, 0, 5);
+        gbc_TFOutputAvoid1.anchor = GridBagConstraints.NORTH;
+        gbc_TFOutputAvoid1.fill = GridBagConstraints.HORIZONTAL;
+        gbc_TFOutputAvoid1.gridx = 1;
+        gbc_TFOutputAvoid1.gridy = 0;
+        gbc_TFOutputAvoid1.weightx = 1;
+        gbc_TFOutputAvoid1.weighty = 0.1;
+        OutputAvoidPanel.add(TFOutputAvoid1, gbc_TFOutputAvoid1);
+
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                JTextField TFOutputAvoid = new JTextField();
+                GridBagConstraints gbc_TFOutputAvoid = new GridBagConstraints();
+                gbc_TFOutputAvoid.fill = GridBagConstraints.HORIZONTAL;
+                gbc_TFOutputAvoid.anchor = GridBagConstraints.NORTH;
+                gbc_TFOutputAvoid.gridx = 1;
+                gbc_TFOutputAvoid.insets = new Insets(0, 0, 0, 5);
+                gbc_TFOutputAvoid.gridy = GuiOutputAvoidCounter;
+                gbc_TFOutputAvoid.weightx = 1;
+                gbc_TFOutputAvoid.weighty = 0.1;
+                OutputAvoidPanel.add(TFOutputAvoid, gbc_TFOutputAvoid);
+                TFoutputAvoids.add(TFOutputAvoid);
+
+                JButton btnDel = new JButton("");
+                btnDel.setBorder(null);
+                btnDel.setContentAreaFilled(false);
+                btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
+                GridBagConstraints gbc_btnDel = new GridBagConstraints();
+                gbc_btnDel.insets = new Insets(0, 0, 0, 5);
+                gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
+                gbc_btnDel.anchor = GridBagConstraints.NORTH;
+                gbc_btnDel.gridx = 0;
+                gbc_btnDel.gridy = GuiOutputAvoidCounter++;
+                gbc_btnDel.weighty = 0.1;
+                OutputAvoidPanel.add(btnDel, gbc_btnDel);
+                delButtons.add(btnDel);
+                btnDel.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        GuiOutputAvoidCounter--;
+                        OutputAvoidPanel.remove(TFOutputAvoid);
+                        OutputAvoidPanel.remove(btnDel);
+                        delButtons.remove(btnDel);
+                        TFoutputAvoids.remove(TFOutputAvoid);
+                        OutputAvoidPanel.repaint();
+                        OutputAvoidPanel.revalidate();
+                    }
+
+                });
+                OutputAvoidPanel.repaint();
+                OutputAvoidPanel.revalidate();
             }
         });
 
