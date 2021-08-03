@@ -37,10 +37,31 @@ def main(file):
     if "blank_state" in EXPLORE_OPT:
         blank_state = int(EXPLORE_OPT["blank_state"], 16)
 
-    find = int(EXPLORE_OPT["find"], 16)
+    find = int(EXPLORE_OPT["find"], 16) if "find" in EXPLORE_OPT else None
+    def find_function(state):
+        if find is not None:
+            if state.addr == find:
+                return {state.addr}
+        if "find_output" in EXPLORE_OPT:
+            output = state.posix.dumps(1)
+            for out in EXPLORE_OPT["find_output"]:
+                if out in output:
+                    return {state.addr}
 
+    avoid = None
     if "avoid" in EXPLORE_OPT:
         avoid = [int(x, 16) for x in EXPLORE_OPT["avoid"].split(',')]
+    if "avoid_output" in EXPLORE_OPT:
+        def avoid_function(state):
+            if avoid is not None:
+                if state.addr in avoid:
+                    return {state.addr}
+            output = state.posix.dumps(1)
+            for out in EXPLORE_OPT["avoid_output"]:
+                if out in output:
+                    return {state.addr}
+    else:
+        avoid_function = avoid
 
     # User can input hex or decimal value (argv length / symbolic memory length)
     argv = [EXPLORE_OPT["binary_file"]]
@@ -118,10 +139,7 @@ def main(file):
                 p.hook(int(hook_address, 16), hook_function, length=hook_length)
 
     simgr = p.factory.simulation_manager(state)
-    if "avoid" in locals():
-        simgr.use_technique(angr.exploration_techniques.Explorer(find=find, avoid=avoid))
-    else:
-        simgr.use_technique(angr.exploration_techniques.Explorer(find=find))
+    simgr.use_technique(angr.exploration_techniques.Explorer(find=find_function, avoid=avoid_function))
 
     simgr.run()
 
