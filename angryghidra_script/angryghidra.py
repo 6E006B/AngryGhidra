@@ -45,7 +45,7 @@ def main(file):
         if "find_output" in EXPLORE_OPT:
             output = state.posix.dumps(1)
             for out in EXPLORE_OPT["find_output"]:
-                if out in output:
+                if bytes(out, "utf8") in output:
                     return {state.addr}
 
     avoid = None
@@ -58,7 +58,7 @@ def main(file):
                     return {state.addr}
             output = state.posix.dumps(1)
             for out in EXPLORE_OPT["avoid_output"]:
-                if out in output:
+                if bytes(out, "utf8") in output:
                     return {state.addr}
     else:
         avoid_function = avoid
