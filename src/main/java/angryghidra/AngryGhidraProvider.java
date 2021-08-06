@@ -1793,6 +1793,39 @@ public class AngryGhidraProvider extends ComponentProvider {
                 return null;
             }
 
+            private void setArgvSolution(JSONObject solutionObject) {
+                JSONArray argv = solutionObject.getJSONArray("argv");
+                if (argv != null && argv.isEmpty() == false) {
+                    for (int i=0; i < argv.length(); ++i) {
+                        TFArgsSolutions.get(i).setText(argv.getString(i));
+                    }
+                }
+            }
+
+            private void setMemorySolutions(JSONObject solutionObject) {
+                if (solutionObject.has("memory")) {
+                    JSONObject memorySolutions = solutionObject.getJSONObject("memory");
+                    memorySolutions.keySet().forEach(address -> {
+                        String solution = memorySolutions.getString(address);
+                        if (TFsymbmem_addr.getText().equals(address)) {
+                            TFsymbmem_sol.setText(solution);
+                        }
+                        for (int i = 0; i < TFAddrs.size(); i++) {
+                            if (TFAddrs.get(i).getText().equals(address)) {
+                                TFSolutions.get(i).setText(solution);
+                            }
+                        }
+                    });
+                }
+            }
+
+            private void setOutputSolution(JSONObject solutionObject) {
+                String stdout = solutionObject.getString("stdout");
+                if (stdout != null) {
+                    OutputSolutionArea.setText(stdout.trim());
+                }
+            }
+
             @Override
             protected void done() {
                 if (isTerminated == true) {
@@ -1823,16 +1856,9 @@ public class AngryGhidraProvider extends ComponentProvider {
                             }
                         }
 
-                        JSONArray argv = solutionObject.getJSONArray("argv");
-                        if (argv != null && argv.isEmpty() == false) {
-                            for (int i=0; i < argv.length(); ++i) {
-                                TFArgsSolutions.get(i).setText(argv.getString(i));
-                            }
-                        }
-                        String stdout = solutionObject.getString("stdout");
-                        if (stdout != null) {
-                            OutputSolutionArea.setText(stdout.trim());
-                        }
+                        setArgvSolution(solutionObject);
+                        setMemorySolutions(solutionObject);
+                        setOutputSolution(solutionObject);
                     }
                 }
             }
