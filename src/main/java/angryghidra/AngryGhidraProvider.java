@@ -57,13 +57,7 @@ public class AngryGhidraProvider extends ComponentProvider {
     private JPanel panel;
     private JPanel CSOPanel;
     private JPanel SAPanel;
-    static JTextField TFBlankState;
-    static JTextField TFFind;
-    static JCheckBox chckbxBlankState;
-    static JCheckBox chckbxAvoidAddresses;
     static JTextArea textArea;
-    private IntegerTextField TFArglen;
-    private JTextField TFArgsol;
     private IntegerTextField TFsymbmem_addr;
     private IntegerTextField TFsymbmem_len;
     private JTextField TFsymbmem_sol;
@@ -71,15 +65,12 @@ public class AngryGhidraProvider extends ComponentProvider {
     static IntegerTextField TFstore_val;
     private JTextField TFVal1;
     private int GuiRegCounter;
-    private int GuiArgCounter;
     private int GuiMemCounter;
     static int GuiStoreCounter;
     static int GuiHookCounter;
     private ArrayList < JButton > delButtons;
     private ArrayList < JTextField > TFregs;
     private ArrayList < JTextField > TFVals;
-    private ArrayList < IntegerTextField > TFArgs;
-    private ArrayList < JTextField > TFArgsSolutions;
     private ArrayList < IntegerTextField > TFAddrs;
     private ArrayList < IntegerTextField > TFLens;
     private ArrayList < JTextField > TFSolutions;
@@ -110,6 +101,19 @@ public class AngryGhidraProvider extends ComponentProvider {
     static JPanel RegHookPanel;
     static Map < String[], String[][] > Hook;
 
+    // Main Project Options Panel vars
+    static JTextField TFBlankState;
+    static JTextField TFFind;
+    static JCheckBox chckbxBlankState;
+    static JCheckBox chckbxAvoidAddresses;
+
+    // Arguments Panel vars
+    private IntegerTextField TFArglen;
+    private JTextField TFArgsol;
+    private int GuiArgCounter;
+    private ArrayList < IntegerTextField > TFArgs;
+    private ArrayList < JTextField > TFArgsSolutions;
+
     // Output Panel vars
     private JPanel OutputPanel;
     private ArrayList < JTextField > TFoutputFinds;
@@ -122,7 +126,7 @@ public class AngryGhidraProvider extends ComponentProvider {
     private int GuiOutputAvoidCounter;
     static JPanel OutputFindPanel;
     static JPanel OutputAvoidPanel;
-    
+
     // Status Panel vars
     private JPanel EndPanel;
     private JLabel StatusLabel;
@@ -132,6 +136,8 @@ public class AngryGhidraProvider extends ComponentProvider {
     private JButton btnStop;
     private JTextArea ErrorArea;
     private JScrollPane scrollError;
+    private JTextArea ResultArea;
+    private JScrollPane scrollResult;
 
 
     public AngryGhidraProvider(AngryGhidraPlugin plugin, String owner, Program program) {
@@ -1107,12 +1113,11 @@ public class AngryGhidraProvider extends ComponentProvider {
         JLabel lbOutputSolution = new JLabel("Solution output:");
         lbOutputSolution.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-        OutputSolutionArea = new JTextArea(5, 40);
+        OutputSolutionArea = new JTextArea();
         OutputSolutionArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
         scrollOutputSolution = new JScrollPane(OutputSolutionArea);
         OutputSolutionArea.setEditable(false);
         scrollOutputSolution.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollOutputSolution.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollOutputSolution.setBorder(new LineBorder(Color.blue, 1));
 
         GroupLayout gl_OutputPanel = new GroupLayout(OutputPanel);
@@ -1379,6 +1384,14 @@ public class AngryGhidraProvider extends ComponentProvider {
         scrollError.setBorder(new LineBorder(Color.blue, 1));
         scrollError.setVisible(false);
 
+        ResultArea = new JTextArea();
+        ResultArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        scrollResult = new JScrollPane(ResultArea);
+        ResultArea.setEditable(false);
+        scrollResult.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollResult.setBorder(new LineBorder(Color.blue, 1));
+        scrollResult.setVisible(false);
+
         btnStop = new JButton("Stop");
         btnStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1387,6 +1400,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                     StatusLabel.setText("[+] Stopping...");
                     StatusLabelFound.setText("");
                     scrollError.setVisible(false);
+                    scrollResult.setVisible(false);
                 }
             }
         });
@@ -1398,10 +1412,13 @@ public class AngryGhidraProvider extends ComponentProvider {
         	gl_EndPanel.createParallelGroup(Alignment.LEADING)
         		.addGroup(gl_EndPanel.createSequentialGroup()
         			.addGap(10)
-        			.addComponent(StatusLabelFound, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-        			.addGap(10)
-        			.addComponent(scrollError, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-        			.addGap(10))
+        			.addComponent(StatusLabelFound, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                .addGroup(gl_EndPanel.createSequentialGroup()
+                    .addGap(10)
+                    .addComponent(scrollResult, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
+                .addGroup(gl_EndPanel.createSequentialGroup()
+                    .addGap(10)
+                    .addComponent(scrollError, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
         		.addGroup(gl_EndPanel.createSequentialGroup()
         			.addGroup(gl_EndPanel.createParallelGroup(Alignment.TRAILING)
         				.addGroup(gl_EndPanel.createSequentialGroup()
@@ -1433,10 +1450,15 @@ public class AngryGhidraProvider extends ComponentProvider {
         			.addGroup(gl_EndPanel.createParallelGroup(Alignment.LEADING)
         				.addGroup(gl_EndPanel.createSequentialGroup()
         					.addGap(5)
-        					.addComponent(StatusLabelFound, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
-        				.addGroup(gl_EndPanel.createSequentialGroup()
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(scrollError, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)))
+        					.addComponent(StatusLabelFound, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(gl_EndPanel.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_EndPanel.createSequentialGroup()
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addComponent(scrollResult, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)))
+                    .addGroup(gl_EndPanel.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_EndPanel.createSequentialGroup()
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addComponent(scrollError, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)))
         			.addContainerGap())
         );
         EndPanel.setLayout(gl_EndPanel);
@@ -1550,6 +1572,7 @@ public class AngryGhidraProvider extends ComponentProvider {
             public void actionPerformed(ActionEvent e) {
                 {
                     StatusLabel.setText("[+] Angr options selection");
+                    resetSolutions();
                     StatusLabelFound.setText("");
                     isTerminated = false;
                     angr_options = new JSONObject();
@@ -1664,6 +1687,30 @@ public class AngryGhidraProvider extends ComponentProvider {
                         angr_options.put("Hooks", HookList);
                     }
 
+                    if (TFOutputFind1.getText().isEmpty() == false) {
+                        JSONArray OutputFindDetails = new JSONArray();
+                        OutputFindDetails.put(TFOutputFind1.getText());
+                        for (int i = 0; i < TFoutputFinds.size(); i++) {
+                            if (TFoutputFinds.get(i).getText().isEmpty() == false) {
+                                OutputFindDetails.put(TFoutputFinds.get(i).getText());
+                            }
+                        }
+                        angr_options.put("find_output", OutputFindDetails);
+                    }
+
+                    if (TFOutputAvoid1.getText().isEmpty() == false) {
+                        JSONArray OutputAvoidDetails = new JSONArray();
+                        OutputAvoidDetails.put(TFOutputAvoid1.getText());
+                        for (int i = 0; i < TFoutputAvoids.size(); i++) {
+                            if (TFoutputAvoids.get(i).getText().isEmpty() == false) {
+                                OutputAvoidDetails.put(TFoutputAvoids.get(i).getText());
+                            }
+                        }
+                        angr_options.put("avoid_output", OutputAvoidDetails);
+                    }
+
+                    OutputSolutionArea.setText("");
+
                     panel.revalidate();
                     String binary_path = ThisProgram.getExecutablePath();
 
@@ -1743,38 +1790,39 @@ public class AngryGhidraProvider extends ComponentProvider {
                     return;
                 }
 
-                if (solutionObject != null && solutionObject.isEmpty() == false) {
-                    StatusLabelFound.setText("[+] Solution found:");
+                if (angrError != null && angrError.isEmpty() == false) {
+                    StatusLabelFound.setText("[X] Error during angr execution:");
                     scrollError.setVisible(true);
-                    ErrorArea.setText(solution.trim());
-                    if (insntrace != null && insntrace.isEmpty() == false) {
-                        List < String > TraceList = Arrays.asList(insntrace.split("\\s*,\\s*"));
-                        for (String TraceAddress: TraceList) {
-                            AddressFactory AF = ThisProgram.getAddressFactory();
-                            try {
-                                AngryGhidraPopupMenu.SetColor(AF.getAddress(TraceAddress), Color.getHSBColor(247, 224, 98));
-                            } catch (Exception ex) {};
-                        }
-                    }
-
-                    JSONArray argv = solutionObject.getJSONArray("argv");
-                    if (argv != null && argv.isEmpty() == false) {
-                        for (int i=0; i < argv.length(); ++i) {
-                            TFArgsSolutions.get(i).setText(argv.getString(i));
-                        }
-                    }
-                    String stdout = solutionObject.getString("stdout");
-                    if (stdout != null) {
-                        OutputSolutionArea.setText(stdout.trim());
-                    }
-                } else {
-                    if (angrError != null && angrError.isEmpty() == false) {
-                        StatusLabelFound.setText("[X] Error during angr execution:");
-                        scrollError.setVisible(true);
-                        ErrorArea.setText(angrError.trim());
-                    } else {
+                    ErrorArea.setText(angrError.trim());
+                }
+                if (solutionObject != null) {
+                    scrollResult.setVisible(true);
+                    ResultArea.setText(solution);
+                    if (solutionObject.isEmpty()) {
                         StatusLabelFound.setText("[-] Solution NOT found!");
-                        scrollError.setVisible(false);
+                        OutputSolutionArea.setText("[-] Solution NOT found!");
+                    } else {
+                        StatusLabelFound.setText("[+] Solution found:");
+                        if (insntrace != null && insntrace.isEmpty() == false) {
+                            List < String > TraceList = Arrays.asList(insntrace.split("\\s*,\\s*"));
+                            for (String TraceAddress: TraceList) {
+                                AddressFactory AF = ThisProgram.getAddressFactory();
+                                try {
+                                    AngryGhidraPopupMenu.SetColor(AF.getAddress(TraceAddress), Color.getHSBColor(247, 224, 98));
+                                } catch (Exception ex) {};
+                            }
+                        }
+
+                        JSONArray argv = solutionObject.getJSONArray("argv");
+                        if (argv != null && argv.isEmpty() == false) {
+                            for (int i=0; i < argv.length(); ++i) {
+                                TFArgsSolutions.get(i).setText(argv.getString(i));
+                            }
+                        }
+                        String stdout = solutionObject.getString("stdout");
+                        if (stdout != null) {
+                            OutputSolutionArea.setText(stdout.trim());
+                        }
                     }
                 }
             }
@@ -1846,6 +1894,23 @@ public class AngryGhidraProvider extends ComponentProvider {
 	    }	 
 	    return 0;
 	}
+
+    private void resetSolutions() {
+        // reset arguments panel
+        for (JTextField TFArgSolution: TFArgsSolutions) {
+            TFArgSolution.setText("");
+        }
+
+        // reset output panel
+        OutputSolutionArea.setText("");
+
+        // status panel
+        StatusLabelFound.setText("");
+        scrollResult.setVisible(false);
+        ResultArea.setText("");
+        scrollError.setVisible(false);
+        ErrorArea.setText("");
+    }
 
     @Override
     public JComponent getComponent() {
