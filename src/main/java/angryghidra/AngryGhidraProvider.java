@@ -343,8 +343,6 @@ public class AngryGhidraProvider extends ComponentProvider {
         gbl_ArgPanel.columnWidths = new int[] {
             0,
             0,
-            0,
-            0,
             0
         };
         gbl_ArgPanel.rowHeights = new int[] {
@@ -353,7 +351,6 @@ public class AngryGhidraProvider extends ComponentProvider {
             0
         };
         gbl_ArgPanel.columnWeights = new double[] {
-            0.0,
             0.0,
             0.0,
             0.0,
@@ -372,13 +369,13 @@ public class AngryGhidraProvider extends ComponentProvider {
         JLabel lbLenArg = addLabelToPanel("Length", ArgPanel, 1, 0);
         lbLenArg.setVisible(false);
 
-        JLabel lbSolArg = addLabelToPanel("Solution", ArgPanel, 3, 0);
+        JLabel lbSolArg = addLabelToPanel("Solution", ArgPanel, 2, 0);
         lbSolArg.setVisible(false);
 
         TFArglen = addIntegerTextFieldtoPanel(ArgPanel, 1, 1);
         TFArglen.getComponent().setVisible(false);
 
-        TFArgsol = addTextFieldToPanel(ArgPanel, 3, 1);
+        TFArgsol = addTextFieldToPanel(ArgPanel, 2, 1);
         TFArgsol.setVisible(false);
         TFArgsol.setEditable(false);
         TFArgsSolutions.add(TFArgsol);
@@ -426,7 +423,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                 IntegerTextField TFArg = addIntegerTextFieldtoPanel(ArgPanel, 1, GuiArgCounter);
                 TFArgs.add(TFArg);
 
-                JTextField TFArgSolution = addTextFieldToPanel(ArgPanel, 3, GuiArgCounter);
+                JTextField TFArgSolution = addTextFieldToPanel(ArgPanel, 2, GuiArgCounter);
                 TFArgSolution.setEditable(false);
                 TFArgsSolutions.add(TFArgSolution);
 
@@ -475,9 +472,6 @@ public class AngryGhidraProvider extends ComponentProvider {
         gbl_WMPanel.columnWidths = new int[] {
             0,
             0,
-            0,
-            0,
-            0,
             0
         };
         gbl_WMPanel.rowHeights = new int[] {
@@ -486,14 +480,13 @@ public class AngryGhidraProvider extends ComponentProvider {
             0
         };
         gbl_WMPanel.columnWeights = new double[] {
-            0.0,
-            0.0,
-            0.0,
+            Double.MIN_VALUE,
             0.0,
             0.0,
             Double.MIN_VALUE
         };
         gbl_WMPanel.rowWeights = new double[] {
+            0.0,
             0.0,
             0.0,
             Double.MIN_VALUE
@@ -506,12 +499,12 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         lbStoreAddr = addLabelToPanel("Address", WMPanel, 1, 0);
 
-        lbStoreVal = addLabelToPanel("Value", WMPanel, 3, 0);
+        lbStoreVal = addLabelToPanel("Value", WMPanel, 2, 0);
 
         TFstore_addr = addIntegerTextFieldtoPanel(WMPanel, 1, 1);
         TFstore_addr.setHexMode();
 
-        TFstore_val = addIntegerTextFieldtoPanel(WMPanel, 3, 1);
+        TFstore_val = addIntegerTextFieldtoPanel(WMPanel, 2, 1);
         TFstore_val.setHexMode();
 
         btnAddWM = addButtonToPanel(addIcon, WMPanel, 0, 1);
@@ -522,7 +515,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                 TFaddr.setHexMode();
                 TFStoreAddrs.add(TFaddr);
 
-                IntegerTextField TFval = addIntegerTextFieldtoPanel(WMPanel, 3, GuiStoreCounter);
+                IntegerTextField TFval = addIntegerTextFieldtoPanel(WMPanel, 2, GuiStoreCounter);
                 TFval.setHexMode();
                 TFStoreVals.add(TFval);
 
@@ -594,9 +587,6 @@ public class AngryGhidraProvider extends ComponentProvider {
         gbl_RegPanel.columnWidths = new int[] {
             0,
             0,
-            0,
-            0,
-            0,
             0
         };
         gbl_RegPanel.rowHeights = new int[] {
@@ -604,8 +594,6 @@ public class AngryGhidraProvider extends ComponentProvider {
             0
         };
         gbl_RegPanel.columnWeights = new double[] {
-            0.0,
-            0.0,
             0.0,
             0.0,
             0.0,
@@ -619,9 +607,9 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         JLabel lblReg = addLabelToPanel("Register", RegPanel, 1, 0);
 
-        JLabel lblValue = addLabelToPanel("Value", RegPanel, 3, 0);
+        JLabel lblValue = addLabelToPanel("Value", RegPanel, 2, 0);
 
-        TFVal1 = addTextFieldToPanel(RegPanel, 3, 1);
+        TFVal1 = addTextFieldToPanel(RegPanel, 2, 1);
 
         TFReg1 = addTextFieldToPanel(RegPanel, 1, 1);
 
@@ -636,9 +624,6 @@ public class AngryGhidraProvider extends ComponentProvider {
         gbl_MemPanel.columnWidths = new int[] {
             0,
             0,
-            0,
-            0,
-            0,
             0
         };
         gbl_MemPanel.rowHeights = new int[] {
@@ -647,8 +632,6 @@ public class AngryGhidraProvider extends ComponentProvider {
             0
         };
         gbl_MemPanel.columnWeights = new double[] {
-            0.0,
-            0.0,
             0.0,
             0.0,
             0.0,
@@ -670,16 +653,16 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         JLabel lbMemAddr = addLabelToPanel("Address", MemPanel, 1, 0);
 
-        JLabel lblLentgh = addLabelToPanel("Length", MemPanel, 3, 0);
+        JLabel lblLentgh = addLabelToPanel("Length", MemPanel, 2, 0);
 
-        JLabel lblSolution = addLabelToPanel("Solution", MemPanel, 5, 0);
+        JLabel lblSolution = addLabelToPanel("Solution", MemPanel, 3, 0);
 
         TFsymbmem_addr = addIntegerTextFieldtoPanel(MemPanel, 1, 1);
         TFsymbmem_addr.setHexMode();
 
-        TFsymbmem_len = addIntegerTextFieldtoPanel(MemPanel, 3, 1);
+        TFsymbmem_len = addIntegerTextFieldtoPanel(MemPanel, 2, 1);
 
-        TFsymbmem_sol = addTextFieldToPanel(MemPanel, 5, 1);
+        TFsymbmem_sol = addTextFieldToPanel(MemPanel, 3, 1);
         TFsymbmem_sol.setEditable(false);
 
         CSOPanel.setLayout(gl_CSOPanel);
@@ -687,11 +670,11 @@ public class AngryGhidraProvider extends ComponentProvider {
 
     private GridBagConstraints createGridbagConstraints(int gridx, int gridy) {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = gridx;
-        gbc.insets = new Insets(0, 0, 0, 5);
         gbc.gridy = gridy;
+        gbc.insets = new Insets(0, 0, 0, 5);
         gbc.weightx = 1;
         gbc.weighty = 0.1;
         return gbc;
@@ -715,6 +698,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("SansSerif", Font.PLAIN, 12));
         GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        gbc.fill = GridBagConstraints.NONE;
         targetPanel.add(label, gbc);
         return label;
     }
@@ -725,6 +709,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         button.setBorder(null);
         button.setIcon(icon);
         GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        gbc.weightx = 0;
         targetPanel.add(button, gbc);
         return button;
     }
@@ -733,7 +718,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFReg = addTextFieldToPanel(RegPanel, 1, GuiRegCounter);
         TFregs.add(TFReg);
 
-        JTextField TFVal = addTextFieldToPanel(RegPanel, 3, GuiRegCounter);
+        JTextField TFVal = addTextFieldToPanel(RegPanel, 2, GuiRegCounter);
         TFVals.add(TFVal);
 
         JButton btnDel = addButtonToPanel(delIcon, RegPanel, 0, GuiRegCounter++);
@@ -760,10 +745,10 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFaddr.setHexMode();
         TFAddrs.add(TFaddr);
 
-        IntegerTextField TFlen = addIntegerTextFieldtoPanel(MemPanel, 3, GuiMemCounter);
+        IntegerTextField TFlen = addIntegerTextFieldtoPanel(MemPanel, 2, GuiMemCounter);
         TFLens.add(TFlen);
 
-        JTextField TFsol = addTextFieldToPanel(MemPanel, 5, GuiMemCounter);
+        JTextField TFsol = addTextFieldToPanel(MemPanel, 3, GuiMemCounter);
         TFsol.setEditable(false);
         TFSolutions.add(TFsol);
 
@@ -918,19 +903,12 @@ public class AngryGhidraProvider extends ComponentProvider {
         GridBagLayout gbl_OutputFindPanel = new GridBagLayout();
         gbl_OutputFindPanel.columnWidths = new int[] {
             0,
-            0,
-            0,
-            0,
-            0,
             0
         };
         gbl_OutputFindPanel.rowHeights = new int[] {
             0
         };
         gbl_OutputFindPanel.columnWeights = new double[] {
-            0.0,
-            0.0,
-            0.0,
             0.0,
             0.0,
             Double.MIN_VALUE
@@ -940,7 +918,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         OutputFindPanel.setLayout(gbl_OutputFindPanel);
 
-        TFOutputFind1 = addTextFieldToPanel(OutputFindPanel, 1, 1);
+        TFOutputFind1 = addTextFieldToPanel(OutputFindPanel, 1, 0);
 
         JButton addButton = addButtonToPanel(addIcon, OutputFindPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
@@ -952,19 +930,12 @@ public class AngryGhidraProvider extends ComponentProvider {
         GridBagLayout gbl_OutputAvoidPanel = new GridBagLayout();
         gbl_OutputAvoidPanel.columnWidths = new int[] {
             0,
-            0,
-            0,
-            0,
-            0,
             0
         };
         gbl_OutputAvoidPanel.rowHeights = new int[] {
             0
         };
         gbl_OutputAvoidPanel.columnWeights = new double[] {
-            0.0,
-            0.0,
-            0.0,
             0.0,
             0.0,
             Double.MIN_VALUE
@@ -974,7 +945,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         OutputAvoidPanel.setLayout(gbl_OutputAvoidPanel);
 
-        TFOutputAvoid1 = addTextFieldToPanel(OutputAvoidPanel, 1, 1);
+        TFOutputAvoid1 = addTextFieldToPanel(OutputAvoidPanel, 1, 0);
 
         addButton = addButtonToPanel(addIcon, OutputAvoidPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
