@@ -69,7 +69,8 @@ public class AngryGhidraProvider extends ComponentProvider {
     private Boolean isTerminated;
     private String TmpDir;
     private JScrollPane scroll;
-    private ImageIcon Addicon;
+    private ImageIcon addIcon;
+    private ImageIcon delIcon;
 
     // Main Project Options Panel vars
     static JPanel MPOPanel;
@@ -365,7 +366,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         ArgPanel.setLayout(gbl_ArgPanel);
 
-        JButton btnAddArg = addButtonToPanel(Addicon, ArgPanel, 0, 1);
+        JButton btnAddArg = addButtonToPanel(addIcon, ArgPanel, 0, 1);
         btnAddArg.setVisible(false);
 
         JLabel lbLenArg = addLabelToPanel("Length", ArgPanel, 1, 0);
@@ -429,7 +430,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                 TFArgSolution.setEditable(false);
                 TFArgsSolutions.add(TFArgSolution);
 
-                JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), ArgPanel, 0, GuiArgCounter++);
+                JButton btnDel = addButtonToPanel(delIcon, ArgPanel, 0, GuiArgCounter++);
                 delArgs.add(btnDel);
                 btnDel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -513,7 +514,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFstore_val = addIntegerTextFieldtoPanel(WMPanel, 3, 1);
         TFstore_val.setHexMode();
 
-        btnAddWM = addButtonToPanel(Addicon, WMPanel, 0, 1);
+        btnAddWM = addButtonToPanel(addIcon, WMPanel, 0, 1);
         btnAddWM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -525,7 +526,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                 TFval.setHexMode();
                 TFStoreVals.add(TFval);
 
-                JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), WMPanel, 0, GuiStoreCounter++);
+                JButton btnDel = addButtonToPanel(delIcon, WMPanel, 0, GuiStoreCounter++);
                 delStore.add(btnDel);
                 btnDel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -624,7 +625,7 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         TFReg1 = addTextFieldToPanel(RegPanel, 1, 1);
 
-        JButton btnAddButton = addButtonToPanel(Addicon, RegPanel, 0, 1);
+        JButton btnAddButton = addButtonToPanel(addIcon, RegPanel, 0, 1);
         btnAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addRegisterRow();
@@ -660,7 +661,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         MemPanel.setLayout(gbl_MemPanel);
 
-        JButton btnAddMem = addButtonToPanel(Addicon, MemPanel, 0, 1);
+        JButton btnAddMem = addButtonToPanel(addIcon, MemPanel, 0, 1);
         btnAddMem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addSSVRow();
@@ -735,7 +736,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFVal = addTextFieldToPanel(RegPanel, 3, GuiRegCounter);
         TFVals.add(TFVal);
 
-        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), RegPanel, 0, GuiRegCounter++);
+        JButton btnDel = addButtonToPanel(delIcon, RegPanel, 0, GuiRegCounter++);
         delButtons.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -749,7 +750,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                 RegPanel.repaint();
                 RegPanel.revalidate();
             }
-
         });
         RegPanel.repaint();
         RegPanel.revalidate();
@@ -767,7 +767,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFsol.setEditable(false);
         TFSolutions.add(TFsol);
 
-        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), MemPanel, 0, GuiMemCounter++);
+        JButton btnDel = addButtonToPanel(delIcon, MemPanel, 0, GuiMemCounter++);
         delMem.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -783,7 +783,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                 MemPanel.repaint();
                 MemPanel.revalidate();
             }
-
         });
 
         MemPanel.repaint();
@@ -943,7 +942,7 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         TFOutputFind1 = addTextFieldToPanel(OutputFindPanel, 1, 1);
 
-        JButton addButton = addButtonToPanel(Addicon, OutputFindPanel, 0, 0);
+        JButton addButton = addButtonToPanel(addIcon, OutputFindPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addFindOutputRow();
@@ -977,7 +976,7 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         TFOutputAvoid1 = addTextFieldToPanel(OutputAvoidPanel, 1, 1);
 
-        addButton = addButtonToPanel(Addicon, OutputAvoidPanel, 0, 0);
+        addButton = addButtonToPanel(addIcon, OutputAvoidPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addAvoidOutputRow();
@@ -991,7 +990,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFOutputFind = addTextFieldToPanel(OutputFindPanel, 1, GuiOutputFindCounter);
         TFoutputFinds.add(TFOutputFind);
 
-        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), OutputFindPanel, 0, GuiOutputFindCounter++);
+        JButton btnDel = addButtonToPanel(delIcon, OutputFindPanel, 0, GuiOutputFindCounter++);
         delButtons.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1003,7 +1002,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                 OutputFindPanel.repaint();
                 OutputFindPanel.revalidate();
             }
-
         });
         OutputFindPanel.repaint();
         OutputFindPanel.revalidate();
@@ -1013,7 +1011,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFOutputAvoid = addTextFieldToPanel(OutputAvoidPanel, 1, GuiOutputAvoidCounter);
         TFoutputAvoids.add(TFOutputAvoid);
 
-        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), OutputAvoidPanel, 0, GuiOutputAvoidCounter++);
+        JButton btnDel = addButtonToPanel(delIcon, OutputAvoidPanel, 0, GuiOutputAvoidCounter++);
         delButtons.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1025,7 +1023,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                 OutputAvoidPanel.repaint();
                 OutputAvoidPanel.revalidate();
             }
-
         });
         OutputAvoidPanel.repaint();
         OutputAvoidPanel.revalidate();
@@ -1198,7 +1195,8 @@ public class AngryGhidraProvider extends ComponentProvider {
         panel.setMinimumSize(new Dimension(210, 510));
         setVisible(true);
 
-        Addicon = new ImageIcon(getClass().getResource("/images/add.png"));
+        addIcon = new ImageIcon(getClass().getResource("/images/add.png"));
+        delIcon = new ImageIcon(getClass().getResource("/images/edit-delete.png"));
         delButtons = new ArrayList < JButton > ();
         delArgs = new ArrayList < JButton > ();
         delMem = new ArrayList < JButton > ();
