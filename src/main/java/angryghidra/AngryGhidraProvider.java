@@ -160,6 +160,52 @@ public class AngryGhidraProvider extends ComponentProvider {
         buildPanel();
     }
 
+    private GridBagConstraints createGridbagConstraints(int gridx, int gridy) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = gridx;
+        gbc.gridy = gridy;
+        gbc.insets = new Insets(0, 0, 0, 5);
+        gbc.weightx = 1;
+        gbc.weighty = 0.1;
+        return gbc;
+    }
+
+    private JTextField addTextFieldToPanel(JPanel targetPanel, int gridx, int gridy) {
+        JTextField textField = new JTextField();
+        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        targetPanel.add(textField, gbc);
+        return textField;
+    }
+
+    private IntegerTextField addIntegerTextFieldtoPanel(JPanel targetPanel, int gridx, int gridy) {
+        IntegerTextField textField = new IntegerTextField();
+        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        targetPanel.add(textField.getComponent(), gbc);
+        return textField;
+    }
+
+    private JLabel addLabelToPanel(String labelText, JPanel targetPanel, int gridx, int gridy) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        gbc.fill = GridBagConstraints.NONE;
+        targetPanel.add(label, gbc);
+        return label;
+    }
+
+    private JButton addButtonToPanel(ImageIcon icon, JPanel targetPanel, int gridx, int gridy) {
+        JButton button = new JButton("");
+        button.setContentAreaFilled(false);
+        button.setBorder(null);
+        button.setIcon(icon);
+        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        gbc.weightx = 0;
+        targetPanel.add(button, gbc);
+        return button;
+    }
+
     private void buildMPOPanel() {
         MPOPanel = new JPanel();
         MPOPanel.setForeground(new Color(46, 139, 87));
@@ -666,52 +712,6 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFsymbmem_sol.setEditable(false);
 
         CSOPanel.setLayout(gl_CSOPanel);
-    }
-
-    private GridBagConstraints createGridbagConstraints(int gridx, int gridy) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = gridx;
-        gbc.gridy = gridy;
-        gbc.insets = new Insets(0, 0, 0, 5);
-        gbc.weightx = 1;
-        gbc.weighty = 0.1;
-        return gbc;
-    }
-
-    private JTextField addTextFieldToPanel(JPanel targetPanel, int gridx, int gridy) {
-        JTextField textField = new JTextField();
-        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
-        targetPanel.add(textField, gbc);
-        return textField;
-    }
-
-    private IntegerTextField addIntegerTextFieldtoPanel(JPanel targetPanel, int gridx, int gridy) {
-        IntegerTextField textField = new IntegerTextField();
-        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
-        targetPanel.add(textField.getComponent(), gbc);
-        return textField;
-    }
-
-    private JLabel addLabelToPanel(String labelText, JPanel targetPanel, int gridx, int gridy) {
-        JLabel label = new JLabel(labelText);
-        label.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
-        gbc.fill = GridBagConstraints.NONE;
-        targetPanel.add(label, gbc);
-        return label;
-    }
-
-    private JButton addButtonToPanel(ImageIcon icon, JPanel targetPanel, int gridx, int gridy) {
-        JButton button = new JButton("");
-        button.setContentAreaFilled(false);
-        button.setBorder(null);
-        button.setIcon(icon);
-        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
-        gbc.weightx = 0;
-        targetPanel.add(button, gbc);
-        return button;
     }
 
     private void addRegisterRow() {
