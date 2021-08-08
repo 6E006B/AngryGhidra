@@ -365,42 +365,13 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         ArgPanel.setLayout(gbl_ArgPanel);
 
-        JButton btnAddArg = new JButton("");
-        GridBagConstraints gbc_btnAddArg = new GridBagConstraints();
-        gbc_btnAddArg.anchor = GridBagConstraints.NORTH;
-        gbc_btnAddArg.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnAddArg.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAddArg.gridx = 0;
-        gbc_btnAddArg.gridy = 1;
-        gbc_btnAddArg.weighty = 0.1;
-        ArgPanel.add(btnAddArg, gbc_btnAddArg);
-        btnAddArg.setContentAreaFilled(false);
-        btnAddArg.setIcon(Addicon);
-        btnAddArg.setBorder(null);
+        JButton btnAddArg = addButtonToPanel(Addicon, ArgPanel, 0, 1);
         btnAddArg.setVisible(false);
 
-        JLabel lbLenArg = new JLabel("Length");
-        GridBagConstraints gbc_lbLenArg = new GridBagConstraints();
-        gbc_lbLenArg.insets = new Insets(0, 0, 0, 5);
-        gbc_lbLenArg.anchor = GridBagConstraints.NORTH;
-        gbc_lbLenArg.gridwidth = 2;
-        gbc_lbLenArg.gridx = 1;
-        gbc_lbLenArg.gridy = 0;
-        gbc_lbLenArg.weightx = 1;
-        ArgPanel.add(lbLenArg, gbc_lbLenArg);
-        lbLenArg.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        JLabel lbLenArg = addLabelToPanel("Length", ArgPanel, 1, 0);
         lbLenArg.setVisible(false);
 
-        JLabel lbSolArg = new JLabel("Solution");
-        GridBagConstraints gbc_lbSolArg = new GridBagConstraints();
-        gbc_lbSolArg.insets = new Insets(0, 0, 0, 5);
-        gbc_lbSolArg.anchor = GridBagConstraints.NORTH;
-        gbc_lbSolArg.gridwidth = 2;
-        gbc_lbSolArg.gridx = 3;
-        gbc_lbSolArg.gridy = 0;
-        gbc_lbSolArg.weightx = 1;
-        ArgPanel.add(lbSolArg, gbc_lbSolArg);
-        lbSolArg.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        JLabel lbSolArg = addLabelToPanel("Solution", ArgPanel, 3, 0);
         lbSolArg.setVisible(false);
 
         TFArglen = addIntegerTextFieldtoPanel(ArgPanel, 1, 1);
@@ -458,18 +429,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                 TFArgSolution.setEditable(false);
                 TFArgsSolutions.add(TFArgSolution);
 
-                JButton btnDel = new JButton("");
-                btnDel.setBorder(null);
-                btnDel.setContentAreaFilled(false);
-                btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-                GridBagConstraints gbc_btnDel = new GridBagConstraints();
-                gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-                gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-                gbc_btnDel.anchor = GridBagConstraints.NORTH;
-                gbc_btnDel.gridx = 0;
-                gbc_btnDel.gridy = GuiArgCounter++;
-                gbc_btnDel.weighty = 0.1;
-                ArgPanel.add(btnDel, gbc_btnDel);
+                JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), ArgPanel, 0, GuiArgCounter++);
                 delArgs.add(btnDel);
                 btnDel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -543,23 +503,9 @@ public class AngryGhidraProvider extends ComponentProvider {
         lblWriteToMemory.setHorizontalAlignment(SwingConstants.CENTER);
         lblWriteToMemory.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-        lbStoreAddr = new JLabel("Address");
-        lbStoreAddr.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lbStoreAddr = new GridBagConstraints();
-        gbc_lbStoreAddr.weightx = 1.0;
-        gbc_lbStoreAddr.insets = new Insets(0, 0, 0, 5);
-        gbc_lbStoreAddr.gridx = 1;
-        gbc_lbStoreAddr.gridy = 0;
-        WMPanel.add(lbStoreAddr, gbc_lbStoreAddr);
+        lbStoreAddr = addLabelToPanel("Address", WMPanel, 1, 0);
 
-        lbStoreVal = new JLabel("Value");
-        lbStoreVal.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lbStoreVal = new GridBagConstraints();
-        gbc_lbStoreVal.weightx = 1.0;
-        gbc_lbStoreVal.insets = new Insets(0, 0, 0, 5);
-        gbc_lbStoreVal.gridx = 3;
-        gbc_lbStoreVal.gridy = 0;
-        WMPanel.add(lbStoreVal, gbc_lbStoreVal);
+        lbStoreVal = addLabelToPanel("Value", WMPanel, 3, 0);
 
         TFstore_addr = addIntegerTextFieldtoPanel(WMPanel, 1, 1);
         TFstore_addr.setHexMode();
@@ -567,20 +513,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFstore_val = addIntegerTextFieldtoPanel(WMPanel, 3, 1);
         TFstore_val.setHexMode();
 
-        btnAddWM = new JButton("");
-        btnAddWM.setContentAreaFilled(false);
-        btnAddWM.setBorder(null);
-        btnAddWM.setIcon(Addicon);
-        GridBagConstraints gbc_btnAddWM = new GridBagConstraints();
-        gbc_btnAddWM.weighty = 0.1;
-        gbc_btnAddWM.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnAddWM.anchor = GridBagConstraints.NORTH;
-        gbc_btnAddWM.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAddWM.gridx = 0;
-        gbc_btnAddWM.gridy = 1;
-        gbc_btnAddWM.weighty = 0.1;
-        WMPanel.add(btnAddWM, gbc_btnAddWM);
-
+        btnAddWM = addButtonToPanel(Addicon, WMPanel, 0, 1);
         btnAddWM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -592,18 +525,7 @@ public class AngryGhidraProvider extends ComponentProvider {
                 TFval.setHexMode();
                 TFStoreVals.add(TFval);
 
-                JButton btnDel = new JButton("");
-                btnDel.setBorder(null);
-                btnDel.setContentAreaFilled(false);
-                btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-                GridBagConstraints gbc_btnDel = new GridBagConstraints();
-                gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-                gbc_btnDel.anchor = GridBagConstraints.NORTH;
-                gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-                gbc_btnDel.gridx = 0;
-                gbc_btnDel.gridy = GuiStoreCounter++;
-                gbc_btnDel.weighty = 0.1;
-                WMPanel.add(btnDel, gbc_btnDel);
+                JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), WMPanel, 0, GuiStoreCounter++);
                 delStore.add(btnDel);
                 btnDel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -617,7 +539,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                         WMPanel.repaint();
                         WMPanel.revalidate();
                     }
-
                 });
                 WMPanel.repaint();
                 WMPanel.revalidate();
@@ -695,43 +616,15 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         RegPanel.setLayout(gbl_RegPanel);
 
-        JLabel lblReg = new JLabel("Register");
-        lblReg.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lblReg = new GridBagConstraints();
-        gbc_lblReg.anchor = GridBagConstraints.SOUTH;
-        gbc_lblReg.insets = new Insets(0, 0, 0, 5);
-        gbc_lblReg.gridx = 1;
-        gbc_lblReg.gridy = 0;
-        gbc_lblReg.weightx = 1;
-        RegPanel.add(lblReg, gbc_lblReg);
+        JLabel lblReg = addLabelToPanel("Register", RegPanel, 1, 0);
 
-        JLabel lblValue = new JLabel("Value");
-        lblValue.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lblValue = new GridBagConstraints();
-        gbc_lblValue.anchor = GridBagConstraints.SOUTH;
-        gbc_lblValue.insets = new Insets(0, 0, 0, 5);
-        gbc_lblValue.gridx = 3;
-        gbc_lblValue.gridy = 0;
-        gbc_lblValue.weightx = 1;
-        RegPanel.add(lblValue, gbc_lblValue);
-
-        JButton btnAddButton = new JButton("");
-        GridBagConstraints gbc_btnAddButton = new GridBagConstraints();
-        gbc_btnAddButton.anchor = GridBagConstraints.NORTH;
-        gbc_btnAddButton.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnAddButton.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAddButton.gridx = 0;
-        gbc_btnAddButton.gridy = 1;
-        gbc_btnAddButton.weighty = 0.1;
-        RegPanel.add(btnAddButton, gbc_btnAddButton);
-        btnAddButton.setBorder(null);
-        btnAddButton.setContentAreaFilled(false);
-        btnAddButton.setIcon(Addicon);
+        JLabel lblValue = addLabelToPanel("Value", RegPanel, 3, 0);
 
         TFVal1 = addTextFieldToPanel(RegPanel, 3, 1);
 
         TFReg1 = addTextFieldToPanel(RegPanel, 1, 1);
 
+        JButton btnAddButton = addButtonToPanel(Addicon, RegPanel, 0, 1);
         btnAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addRegisterRow();
@@ -767,45 +660,18 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         MemPanel.setLayout(gbl_MemPanel);
 
-        JButton btnAddMem = new JButton("");
-        GridBagConstraints gbc_btnAddMem = new GridBagConstraints();
-        gbc_btnAddMem.anchor = GridBagConstraints.NORTH;
-        gbc_btnAddMem.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnAddMem.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAddMem.gridx = 0;
-        gbc_btnAddMem.gridy = 1;
-        gbc_btnAddMem.weighty = 0.1;
-        MemPanel.add(btnAddMem, gbc_btnAddMem);
-        btnAddMem.setIcon(Addicon);
-        btnAddMem.setBorder(null);
-        btnAddMem.setContentAreaFilled(false);
+        JButton btnAddMem = addButtonToPanel(Addicon, MemPanel, 0, 1);
+        btnAddMem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addSSVRow();
+            }
+        });
 
-        JLabel lbMemAddr = new JLabel("Address");
-        lbMemAddr.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lbMemAddr = new GridBagConstraints();
-        gbc_lbMemAddr.insets = new Insets(0, 0, 0, 5);
-        gbc_lbMemAddr.gridx = 1;
-        gbc_lbMemAddr.gridy = 0;
-        gbc_lbMemAddr.weightx = 1;
-        MemPanel.add(lbMemAddr, gbc_lbMemAddr);
+        JLabel lbMemAddr = addLabelToPanel("Address", MemPanel, 1, 0);
 
-        JLabel lblLentgh = new JLabel("Length");
-        lblLentgh.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lblLentgh = new GridBagConstraints();
-        gbc_lblLentgh.insets = new Insets(0, 0, 0, 5);
-        gbc_lblLentgh.gridx = 3;
-        gbc_lblLentgh.gridy = 0;
-        gbc_lblLentgh.weightx = 1;
-        MemPanel.add(lblLentgh, gbc_lblLentgh);
+        JLabel lblLentgh = addLabelToPanel("Length", MemPanel, 3, 0);
 
-        JLabel lblSolution = new JLabel("Solution");
-        lblLentgh.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        GridBagConstraints gbc_lblSolution = new GridBagConstraints();
-        gbc_lblSolution.insets = new Insets(0, 0, 0, 5);
-        gbc_lblSolution.gridx = 5;
-        gbc_lblSolution.gridy = 0;
-        gbc_lblSolution.weightx = 1;
-        MemPanel.add(lblSolution, gbc_lblSolution);
+        JLabel lblSolution = addLabelToPanel("Solution", MemPanel, 5, 0);
 
         TFsymbmem_addr = addIntegerTextFieldtoPanel(MemPanel, 1, 1);
         TFsymbmem_addr.setHexMode();
@@ -814,12 +680,6 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         TFsymbmem_sol = addTextFieldToPanel(MemPanel, 5, 1);
         TFsymbmem_sol.setEditable(false);
-
-        btnAddMem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                addSSVRow();
-            }
-        });
 
         CSOPanel.setLayout(gl_CSOPanel);
     }
@@ -850,6 +710,24 @@ public class AngryGhidraProvider extends ComponentProvider {
         return textField;
     }
 
+    private JLabel addLabelToPanel(String labelText, JPanel targetPanel, int gridx, int gridy) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        targetPanel.add(label, gbc);
+        return label;
+    }
+
+    private JButton addButtonToPanel(ImageIcon icon, JPanel targetPanel, int gridx, int gridy) {
+        JButton button = new JButton("");
+        button.setContentAreaFilled(false);
+        button.setBorder(null);
+        button.setIcon(icon);
+        GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
+        targetPanel.add(button, gbc);
+        return button;
+    }
+
     private void addRegisterRow() {
         JTextField TFReg = addTextFieldToPanel(RegPanel, 1, GuiRegCounter);
         TFregs.add(TFReg);
@@ -857,18 +735,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFVal = addTextFieldToPanel(RegPanel, 3, GuiRegCounter);
         TFVals.add(TFVal);
 
-        JButton btnDel = new JButton("");
-        btnDel.setBorder(null);
-        btnDel.setContentAreaFilled(false);
-        btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-        GridBagConstraints gbc_btnDel = new GridBagConstraints();
-        gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-        gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnDel.anchor = GridBagConstraints.NORTH;
-        gbc_btnDel.gridx = 0;
-        gbc_btnDel.gridy = GuiRegCounter++;
-        gbc_btnDel.weighty = 0.1;
-        RegPanel.add(btnDel, gbc_btnDel);
+        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), RegPanel, 0, GuiRegCounter++);
         delButtons.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -900,18 +767,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFsol.setEditable(false);
         TFSolutions.add(TFsol);
 
-        JButton btnDel = new JButton("");
-        btnDel.setBorder(null);
-        btnDel.setContentAreaFilled(false);
-        btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-        GridBagConstraints gbc_btnDel = new GridBagConstraints();
-        gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnDel.anchor = GridBagConstraints.NORTH;
-        gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-        gbc_btnDel.gridx = 0;
-        gbc_btnDel.gridy = GuiMemCounter++;
-        gbc_btnDel.weighty = 0.1;
-        MemPanel.add(btnDel, gbc_btnDel);
+        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), MemPanel, 0, GuiMemCounter++);
         delMem.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1085,21 +941,9 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         OutputFindPanel.setLayout(gbl_OutputFindPanel);
 
-        JButton addButton = new JButton("");
-        GridBagConstraints gbc_addButton = new GridBagConstraints();
-        gbc_addButton.anchor = GridBagConstraints.NORTH;
-        gbc_addButton.fill = GridBagConstraints.HORIZONTAL;
-        gbc_addButton.insets = new Insets(0, 0, 0, 5);
-        gbc_addButton.gridx = 0;
-        gbc_addButton.gridy = 0;
-        gbc_addButton.weighty = 0.1;
-        OutputFindPanel.add(addButton, gbc_addButton);
-        addButton.setBorder(null);
-        addButton.setContentAreaFilled(false);
-        addButton.setIcon(Addicon);
-
         TFOutputFind1 = addTextFieldToPanel(OutputFindPanel, 1, 1);
 
+        JButton addButton = addButtonToPanel(Addicon, OutputFindPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addFindOutputRow();
@@ -1131,21 +975,9 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         OutputAvoidPanel.setLayout(gbl_OutputAvoidPanel);
 
-        addButton = new JButton("");
-        gbc_addButton = new GridBagConstraints();
-        gbc_addButton.anchor = GridBagConstraints.NORTH;
-        gbc_addButton.fill = GridBagConstraints.HORIZONTAL;
-        gbc_addButton.insets = new Insets(0, 0, 0, 5);
-        gbc_addButton.gridx = 0;
-        gbc_addButton.gridy = 0;
-        gbc_addButton.weighty = 0.1;
-        OutputAvoidPanel.add(addButton, gbc_addButton);
-        addButton.setBorder(null);
-        addButton.setContentAreaFilled(false);
-        addButton.setIcon(Addicon);
-
         TFOutputAvoid1 = addTextFieldToPanel(OutputAvoidPanel, 1, 1);
 
+        addButton = addButtonToPanel(Addicon, OutputAvoidPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addAvoidOutputRow();
@@ -1159,18 +991,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFOutputFind = addTextFieldToPanel(OutputFindPanel, 1, GuiOutputFindCounter);
         TFoutputFinds.add(TFOutputFind);
 
-        JButton btnDel = new JButton("");
-        btnDel.setBorder(null);
-        btnDel.setContentAreaFilled(false);
-        btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-        GridBagConstraints gbc_btnDel = new GridBagConstraints();
-        gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-        gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnDel.anchor = GridBagConstraints.NORTH;
-        gbc_btnDel.gridx = 0;
-        gbc_btnDel.gridy = GuiOutputFindCounter++;
-        gbc_btnDel.weighty = 0.1;
-        OutputFindPanel.add(btnDel, gbc_btnDel);
+        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), OutputFindPanel, 0, GuiOutputFindCounter++);
         delButtons.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1192,18 +1013,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JTextField TFOutputAvoid = addTextFieldToPanel(OutputAvoidPanel, 1, GuiOutputAvoidCounter);
         TFoutputAvoids.add(TFOutputAvoid);
 
-        JButton btnDel = new JButton("");
-        btnDel.setBorder(null);
-        btnDel.setContentAreaFilled(false);
-        btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-        GridBagConstraints gbc_btnDel = new GridBagConstraints();
-        gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-        gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-        gbc_btnDel.anchor = GridBagConstraints.NORTH;
-        gbc_btnDel.gridx = 0;
-        gbc_btnDel.gridy = GuiOutputAvoidCounter++;
-        gbc_btnDel.weighty = 0.1;
-        OutputAvoidPanel.add(btnDel, gbc_btnDel);
+        JButton btnDel = addButtonToPanel(new ImageIcon(getClass().getResource("/images/edit-delete.png")), OutputAvoidPanel, 0, GuiOutputAvoidCounter++);
         delButtons.add(btnDel);
         btnDel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1848,7 +1658,6 @@ public class AngryGhidraProvider extends ComponentProvider {
     public JComponent getComponent() {
         return panel;
     }
-
 
     public void setProgram(Program p) {
         ThisProgram = p;
