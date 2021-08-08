@@ -196,7 +196,6 @@ public class AngryGhidraPopupMenu extends ListingContextAction {
 
             @Override
             protected void actionPerformed(ListingActionContext context) {
-                    
             	Address MinAddress = context.getSelection().getMinAddress();
                 AddressIterator addressRange = context.getSelection().getAddresses(true);
                 StringBuilder HexStringBuilder = new StringBuilder();
@@ -209,75 +208,12 @@ public class AngryGhidraPopupMenu extends ListingContextAction {
 						e.printStackTrace();
 					}
                 	HexStringBuilder.append(String.format("%02X", Byte));                	
-                }  
-                String HexValueString = HexStringBuilder.toString();                
-                BigInteger HexValue = new BigInteger(HexValueString, 16);
-                
-                if (AngryGhidraProvider.TFstore_addr.getText().isEmpty() == false) {
-                	
-                	IntegerTextField TFaddr = new IntegerTextField();
-                	TFaddr.setHexMode();
-                	TFaddr.setValue(MinAddress.getOffset());
-                    GridBagConstraints gbc_TFaddr = new GridBagConstraints();
-                    gbc_TFaddr.fill = GridBagConstraints.HORIZONTAL;
-                    gbc_TFaddr.anchor = GridBagConstraints.NORTH;
-                    gbc_TFaddr.gridx = 1;
-                    gbc_TFaddr.insets = new Insets(0, 0, 0, 5);
-                    gbc_TFaddr.gridy = AngryGhidraProvider.GuiStoreCounter;
-                    gbc_TFaddr.weightx = 1;
-                    gbc_TFaddr.weighty = 0.1;
-                    AngryGhidraProvider.WMPanel.add(TFaddr.getComponent(), gbc_TFaddr);                
-                    AngryGhidraProvider.TFStoreAddrs.add(TFaddr);
-
-                    IntegerTextField TFval = new IntegerTextField();
-                    TFval.setHexMode();
-                    TFval.setValue(HexValue);
-                    GridBagConstraints gbc_TFval = new GridBagConstraints();
-                    gbc_TFval.fill = GridBagConstraints.HORIZONTAL;
-                    gbc_TFval.anchor = GridBagConstraints.NORTH;
-                    gbc_TFval.insets = new Insets(0, 0, 0, 5);
-                    gbc_TFval.gridx = 3;
-                    gbc_TFval.gridy = AngryGhidraProvider.GuiStoreCounter;
-                    gbc_TFval.weightx = 1;
-                    gbc_TFval.weighty = 0.1;
-                    AngryGhidraProvider.WMPanel.add(TFval.getComponent(), gbc_TFval);                
-                    AngryGhidraProvider.TFStoreVals.add(TFval);
-
-                    JButton btnDel = new JButton("");
-                    btnDel.setBorder(null);
-                    btnDel.setContentAreaFilled(false);
-                    btnDel.setIcon(new ImageIcon(getClass().getResource("/images/edit-delete.png")));
-                    GridBagConstraints gbc_btnDel = new GridBagConstraints();
-                    gbc_btnDel.fill = GridBagConstraints.HORIZONTAL;
-                    gbc_btnDel.anchor = GridBagConstraints.NORTH;
-                    gbc_btnDel.insets = new Insets(0, 0, 0, 5);
-                    gbc_btnDel.gridx = 0;
-                    gbc_btnDel.gridy = AngryGhidraProvider.GuiStoreCounter++;
-                    gbc_btnDel.weighty = 0.1;				
-                    AngryGhidraProvider.WMPanel.add(btnDel, gbc_btnDel);
-                    AngryGhidraProvider.delStore.add(btnDel);
-                    btnDel.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                        	AngryGhidraProvider.GuiStoreCounter--;
-                        	AngryGhidraProvider.WMPanel.remove(TFaddr.getComponent());
-                        	AngryGhidraProvider.WMPanel.remove(TFval.getComponent());
-                        	AngryGhidraProvider.WMPanel.remove(btnDel);
-                        	AngryGhidraProvider.delStore.remove(btnDel);
-                        	AngryGhidraProvider.TFStoreAddrs.remove(TFaddr);
-                        	AngryGhidraProvider.TFStoreVals.remove(TFval);
-                        	AngryGhidraProvider.WMPanel.repaint();
-                        	AngryGhidraProvider.WMPanel.revalidate();
-                        }
-
-                    });
-                    AngryGhidraProvider.WMPanel.repaint();
-                    AngryGhidraProvider.WMPanel.revalidate();
-                }            
-                else {
-                	AngryGhidraProvider.TFstore_addr.setValue(MinAddress.getOffset());
-                	AngryGhidraProvider.TFstore_val.setValue(HexValue);                	
                 }
-                
+                String HexValueString = HexStringBuilder.toString();
+                if (HexValueString.isEmpty() == false) {
+                    BigInteger HexValue = new BigInteger(HexValueString, 16);
+                    AngryGhidraProvider.addWriteMemoryRow(MinAddress.getOffset(), HexValue);
+                }
             }
         };   
         ApplyPatchedBytes.setPopupMenuData(new MenuData(new String[] {

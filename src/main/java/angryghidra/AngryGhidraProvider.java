@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,8 +70,8 @@ public class AngryGhidraProvider extends ComponentProvider {
     private Boolean isTerminated;
     private String TmpDir;
     private JScrollPane scroll;
-    private ImageIcon addIcon;
-    private ImageIcon delIcon;
+    private static ImageIcon addIcon;
+    private static ImageIcon delIcon;
 
     // Main Project Options Panel vars
     static JPanel MPOPanel;
@@ -107,19 +108,12 @@ public class AngryGhidraProvider extends ComponentProvider {
     static ArrayList < IntegerTextField > TFStoreVals;
     private ArrayList < JButton > delMem;
     static ArrayList < JButton > delStore;
-    private JTextField TFVal1;
     static int GuiStoreCounter;
     private int GuiRegCounter;
     private int GuiMemCounter;
-    static IntegerTextField TFstore_addr;
-    static IntegerTextField TFstore_val;
-    private IntegerTextField TFsymbmem_addr;
-    private IntegerTextField TFsymbmem_len;
-    private JTextField TFsymbmem_sol;
     private ArrayList < IntegerTextField > TFAddrs;
     private ArrayList < IntegerTextField > TFLens;
     private ArrayList < JTextField > TFSolutions;
-    private JTextField TFReg1;
     private JButton btnAddWM;
     private JLabel lbStoreAddr;
     private JLabel lbStoreVal;
@@ -160,7 +154,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         buildPanel();
     }
 
-    private GridBagConstraints createGridbagConstraints(int gridx, int gridy) {
+    private static GridBagConstraints createGridbagConstraints(int gridx, int gridy) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -172,21 +166,21 @@ public class AngryGhidraProvider extends ComponentProvider {
         return gbc;
     }
 
-    private JTextField addTextFieldToPanel(JPanel targetPanel, int gridx, int gridy) {
+    private static JTextField addTextFieldToPanel(JPanel targetPanel, int gridx, int gridy) {
         JTextField textField = new JTextField();
         GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
         targetPanel.add(textField, gbc);
         return textField;
     }
 
-    private IntegerTextField addIntegerTextFieldtoPanel(JPanel targetPanel, int gridx, int gridy) {
+    private static IntegerTextField addIntegerTextFieldtoPanel(JPanel targetPanel, int gridx, int gridy) {
         IntegerTextField textField = new IntegerTextField();
         GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
         targetPanel.add(textField.getComponent(), gbc);
         return textField;
     }
 
-    private JLabel addLabelToPanel(String labelText, JPanel targetPanel, int gridx, int gridy) {
+    private static JLabel addLabelToPanel(String labelText, JPanel targetPanel, int gridx, int gridy) {
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("SansSerif", Font.PLAIN, 12));
         GridBagConstraints gbc = createGridbagConstraints(gridx, gridy);
@@ -195,7 +189,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         return label;
     }
 
-    private JButton addButtonToPanel(ImageIcon icon, JPanel targetPanel, int gridx, int gridy) {
+    private static JButton addButtonToPanel(ImageIcon icon, JPanel targetPanel, int gridx, int gridy) {
         JButton button = new JButton("");
         button.setContentAreaFilled(false);
         button.setBorder(null);
@@ -547,41 +541,18 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         lbStoreVal = addLabelToPanel("Value", WMPanel, 2, 0);
 
-        TFstore_addr = addIntegerTextFieldtoPanel(WMPanel, 1, 1);
-        TFstore_addr.setHexMode();
+        IntegerTextField addrStoreTF = addIntegerTextFieldtoPanel(WMPanel, 1, 1);
+        addrStoreTF.setHexMode();
+        TFStoreAddrs.add(addrStoreTF);
 
-        TFstore_val = addIntegerTextFieldtoPanel(WMPanel, 2, 1);
-        TFstore_val.setHexMode();
+        IntegerTextField valueStoreTF = addIntegerTextFieldtoPanel(WMPanel, 2, 1);
+        valueStoreTF.setHexMode();
+        TFStoreVals.add(valueStoreTF);
 
         btnAddWM = addButtonToPanel(addIcon, WMPanel, 0, 1);
         btnAddWM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                IntegerTextField TFaddr = addIntegerTextFieldtoPanel(WMPanel, 1, GuiStoreCounter);
-                TFaddr.setHexMode();
-                TFStoreAddrs.add(TFaddr);
-
-                IntegerTextField TFval = addIntegerTextFieldtoPanel(WMPanel, 2, GuiStoreCounter);
-                TFval.setHexMode();
-                TFStoreVals.add(TFval);
-
-                JButton btnDel = addButtonToPanel(delIcon, WMPanel, 0, GuiStoreCounter++);
-                delStore.add(btnDel);
-                btnDel.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        GuiStoreCounter--;
-                        WMPanel.remove(TFaddr.getComponent());
-                        WMPanel.remove(TFval.getComponent());
-                        WMPanel.remove(btnDel);
-                        delStore.remove(btnDel);
-                        TFStoreAddrs.remove(TFaddr);
-                        TFStoreVals.remove(TFval);
-                        WMPanel.repaint();
-                        WMPanel.revalidate();
-                    }
-                });
-                WMPanel.repaint();
-                WMPanel.revalidate();
+                addWriteMemoryRow(null, null);
             }
         });
 
@@ -655,9 +626,11 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         JLabel lblValue = addLabelToPanel("Value", RegPanel, 2, 0);
 
-        TFVal1 = addTextFieldToPanel(RegPanel, 2, 1);
+        JTextField valueTF = addTextFieldToPanel(RegPanel, 2, 1);
+        TFVals.add(valueTF);
 
-        TFReg1 = addTextFieldToPanel(RegPanel, 1, 1);
+        JTextField registerTF = addTextFieldToPanel(RegPanel, 1, 1);
+        TFregs.add(registerTF);
 
         JButton btnAddButton = addButtonToPanel(addIcon, RegPanel, 0, 1);
         btnAddButton.addActionListener(new ActionListener() {
@@ -703,13 +676,16 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         JLabel lblSolution = addLabelToPanel("Solution", MemPanel, 3, 0);
 
-        TFsymbmem_addr = addIntegerTextFieldtoPanel(MemPanel, 1, 1);
-        TFsymbmem_addr.setHexMode();
+        IntegerTextField addrTF = addIntegerTextFieldtoPanel(MemPanel, 1, 1);
+        addrTF.setHexMode();
+        TFAddrs.add(addrTF);
 
-        TFsymbmem_len = addIntegerTextFieldtoPanel(MemPanel, 2, 1);
+        IntegerTextField lengthTF = addIntegerTextFieldtoPanel(MemPanel, 2, 1);
+        TFLens.add(lengthTF);
 
-        TFsymbmem_sol = addTextFieldToPanel(MemPanel, 3, 1);
-        TFsymbmem_sol.setEditable(false);
+        JTextField solutionTF = addTextFieldToPanel(MemPanel, 3, 1);
+        solutionTF.setEditable(false);
+        TFSolutions.add(solutionTF);
 
         CSOPanel.setLayout(gl_CSOPanel);
     }
@@ -1330,43 +1306,30 @@ public class AngryGhidraProvider extends ComponentProvider {
             }
         }
 
-        if (TFsymbmem_addr.getText().isEmpty() == false & TFsymbmem_len.getText().isEmpty() == false) {
-
-            JSONObject MemDetails = new JSONObject();
-            MemDetails.put(TFsymbmem_addr.getText(), TFsymbmem_len.getText());
-            for (int i = 0; i < TFAddrs.size(); i++) {
-                if (TFAddrs.get(i).getText().isEmpty() == false & TFLens.get(i).getText().isEmpty() == false) {
-                    MemDetails.put(TFAddrs.get(i).getText(), TFLens.get(i).getText());
-                }
+        JSONObject MemDetails = new JSONObject();
+        for (int i = 0; i < TFAddrs.size(); i++) {
+            if (TFAddrs.get(i).getText().isEmpty() == false & TFLens.get(i).getText().isEmpty() == false) {
+                MemDetails.put(TFAddrs.get(i).getText(), TFLens.get(i).getText());
             }
-            angr_options.put("Memory", MemDetails);
         }
+        angr_options.put("Memory", MemDetails);
 
-        if (TFstore_addr.getText().isEmpty() == false & TFstore_val.getText().isEmpty() == false) {
-
-            JSONObject MemStoreDetails = new JSONObject();
-            MemStoreDetails.put(TFstore_addr.getText(), TFstore_val.getText());
-            for (int i = 0; i < TFStoreAddrs.size(); i++) {
-                if (TFStoreAddrs.get(i).getText().isEmpty() == false & TFStoreVals.get(i).getText().isEmpty() == false) {
-                    MemStoreDetails.put(TFStoreAddrs.get(i).getText(), TFStoreVals.get(i).getText());
-                }
+        JSONObject MemStoreDetails = new JSONObject();
+        for (int i = 0; i < TFStoreAddrs.size(); i++) {
+            if (TFStoreAddrs.get(i).getText().isEmpty() == false & TFStoreVals.get(i).getText().isEmpty() == false) {
+                MemStoreDetails.put(TFStoreAddrs.get(i).getText(), TFStoreVals.get(i).getText());
             }
-            angr_options.put("Store", MemStoreDetails);
         }
+        angr_options.put("Store", MemStoreDetails);
 
-        if (TFReg1.getText().isEmpty() == false & TFVal1.getText().isEmpty() == false & (TFVal1.getText().matches("0x[0-9A-Fa-f]+") == true ||
-                TFVal1.getText().matches("[0-9]+") == true || TFVal1.getText().contains("sv"))) {
-
-            JSONObject RegDetails = new JSONObject();
-            RegDetails.put(TFReg1.getText(), TFVal1.getText());
-            for (int i = 0; i < TFregs.size(); i++) {
-                if (TFregs.get(i).getText().isEmpty() == false & TFVals.get(i).getText().isEmpty() == false & (TFVals.get(i).getText().matches("0x[0-9A-Fa-f]+") == true ||
-                        TFVals.get(i).getText().matches("[0-9]+") == true || TFVals.get(i).getText().contains("sv"))) {
-                    RegDetails.put(TFregs.get(i).getText(), TFVals.get(i).getText());
-                }
+        JSONObject RegDetails = new JSONObject();
+        for (int i = 0; i < TFregs.size(); i++) {
+            if (TFregs.get(i).getText().isEmpty() == false & TFVals.get(i).getText().isEmpty() == false & (TFVals.get(i).getText().matches("0x[0-9A-Fa-f]+") == true ||
+                    TFVals.get(i).getText().matches("[0-9]+") == true || TFVals.get(i).getText().contains("sv"))) {
+                RegDetails.put(TFregs.get(i).getText(), TFVals.get(i).getText());
             }
-            angr_options.put("Registers", RegDetails);
         }
+        angr_options.put("Registers", RegDetails);
 
         if (Hook.isEmpty() == false) {
             JSONArray HookList = new JSONArray();
@@ -1482,9 +1445,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                     JSONObject memorySolutions = solutionObject.getJSONObject("memory");
                     memorySolutions.keySet().forEach(address -> {
                         String solution = memorySolutions.getString(address);
-                        if (TFsymbmem_addr.getText().equals(address)) {
-                            TFsymbmem_sol.setText(solution);
-                        }
                         for (int i = 0; i < TFAddrs.size(); i++) {
                             if (TFAddrs.get(i).getText().equals(address)) {
                                 TFSolutions.get(i).setText(solution);
@@ -1621,6 +1581,40 @@ public class AngryGhidraProvider extends ComponentProvider {
         ResultArea.setText("");
         scrollError.setVisible(false);
         ErrorArea.setText("");
+    }
+
+    public static void addWriteMemoryRow(Long address, BigInteger value) {
+        IntegerTextField TFaddr = addIntegerTextFieldtoPanel(WMPanel, 1, GuiStoreCounter);
+        TFaddr.setHexMode();
+        if (address != null) {
+            TFaddr.setValue(address);
+        }
+        TFStoreAddrs.add(TFaddr);
+
+        IntegerTextField TFval = addIntegerTextFieldtoPanel(WMPanel, 2, GuiStoreCounter);
+        TFval.setHexMode();
+        if (value != value) {
+            TFval.setValue(value);
+        }
+        TFStoreVals.add(TFval);
+
+        JButton btnDel = addButtonToPanel(delIcon, WMPanel, 0, GuiStoreCounter++);
+        delStore.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiStoreCounter--;
+                WMPanel.remove(TFaddr.getComponent());
+                WMPanel.remove(TFval.getComponent());
+                WMPanel.remove(btnDel);
+                delStore.remove(btnDel);
+                TFStoreAddrs.remove(TFaddr);
+                TFStoreVals.remove(TFval);
+                WMPanel.repaint();
+                WMPanel.revalidate();
+            }
+        });
+        WMPanel.repaint();
+        WMPanel.revalidate();
     }
 
     @Override
