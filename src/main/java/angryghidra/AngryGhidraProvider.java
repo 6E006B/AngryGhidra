@@ -1571,8 +1571,13 @@ public class AngryGhidraProvider extends ComponentProvider {
 
     private void resetSolutions() {
         // reset arguments panel
-        for (JTextField TFArgSolution: TFArgsSolutions) {
-            TFArgSolution.setText("");
+        for (JTextField argumentSolution: TFArgsSolutions) {
+            argumentSolution.setText("");
+        }
+
+        // reset memory panel
+        for (JTextField memorySolution: TFSolutions) {
+            memorySolution.setText("");
         }
 
         // reset output panel
