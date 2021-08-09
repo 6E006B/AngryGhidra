@@ -1055,6 +1055,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         });
         btnImport.setFont(new Font("SansSerif", Font.PLAIN, 12));
         btnImport.setIcon(importIcon);
+        btnImport.setEnabled(false);
 
         btnExport = new JButton("Export");
         btnExport.addActionListener(new ActionListener() {
