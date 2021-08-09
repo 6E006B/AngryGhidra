@@ -978,6 +978,8 @@ public class AngryGhidraProvider extends ComponentProvider {
     private void buildStatusPanel() {
         ImageIcon Starticon = new ImageIcon(getClass().getResource("/images/flag.png"));
         ImageIcon Stopicon = new ImageIcon(getClass().getResource("/images/process-stop.png"));
+        ImageIcon importIcon = new ImageIcon(getClass().getResource("/images/down.png"));
+        ImageIcon exportIcon = new ImageIcon(getClass().getResource("/images/up.png"));
 
         EndPanel = new JPanel();
         EndPanel.setBorder(null);
@@ -1052,7 +1054,7 @@ public class AngryGhidraProvider extends ComponentProvider {
             }
         });
         btnImport.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        btnImport.setIcon(Stopicon);
+        btnImport.setIcon(importIcon);
 
         btnExport = new JButton("Export");
         btnExport.addActionListener(new ActionListener() {
@@ -1072,7 +1074,7 @@ public class AngryGhidraProvider extends ComponentProvider {
             }
         });
         btnExport.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        btnExport.setIcon(Stopicon);
+        btnExport.setIcon(exportIcon);
 
         GroupLayout gl_EndPanel = new GroupLayout(EndPanel);
         gl_EndPanel.setHorizontalGroup(
