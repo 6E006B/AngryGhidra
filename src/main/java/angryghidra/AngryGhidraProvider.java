@@ -82,12 +82,13 @@ public class AngryGhidraProvider extends ComponentProvider {
     static JCheckBox chckbxAutoloadlibs;
 
     // Arguments Panel vars
+    private static JPanel ArgPanel;
     private IntegerTextField TFArglen;
     private JTextField TFArgsol;
-    private int GuiArgCounter;
-    private ArrayList < JButton > delArgs;
-    private ArrayList < IntegerTextField > TFArgs;
-    private ArrayList < JTextField > TFArgsSolutions;
+    private static int GuiArgCounter;
+    private static ArrayList < JButton > delArgs;
+    private static ArrayList < IntegerTextField > TFArgs;
+    private static ArrayList < JTextField > TFArgsSolutions;
     static JCheckBox chckbxArg;
 
     // Hook Panel vars
@@ -355,7 +356,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         chckbxArg = new JCheckBox("Arguments");
         chckbxArg.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-        JPanel ArgPanel = new JPanel();
+        ArgPanel = new JPanel();
         ArgPanel.setBorder(null);
 
         GroupLayout gl_SAPanel = new GroupLayout(SAPanel);
@@ -460,30 +461,7 @@ public class AngryGhidraProvider extends ComponentProvider {
 
         btnAddArg.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                IntegerTextField TFArg = addIntegerTextFieldtoPanel(ArgPanel, 1, GuiArgCounter);
-                TFArgs.add(TFArg);
-
-                JTextField TFArgSolution = addTextFieldToPanel(ArgPanel, 2, GuiArgCounter);
-                TFArgSolution.setEditable(false);
-                TFArgsSolutions.add(TFArgSolution);
-
-                JButton btnDel = addButtonToPanel(delIcon, ArgPanel, 0, GuiArgCounter++);
-                delArgs.add(btnDel);
-                btnDel.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        GuiArgCounter--;
-                        ArgPanel.remove(TFArg.getComponent());
-                        ArgPanel.remove(TFArgSolution);
-                        ArgPanel.remove(btnDel);
-                        delArgs.remove(btnDel);
-                        TFArgs.remove(TFArg);
-                        TFArgsSolutions.remove(TFArgSolution);
-                        ArgPanel.repaint();
-                        ArgPanel.revalidate();
-                    }
-                });
-                ArgPanel.repaint();
-                ArgPanel.revalidate();
+                addArgumentRow(null);
             }
         });
         SAPanel.setLayout(gl_SAPanel);
@@ -635,7 +613,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JButton btnAddButton = addButtonToPanel(addIcon, RegPanel, 0, 1);
         btnAddButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addRegisterRow();
+                addRegisterRow(null, null);
             }
         });
 
@@ -666,7 +644,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JButton btnAddMem = addButtonToPanel(addIcon, MemPanel, 0, 1);
         btnAddMem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addSSVRow();
+                addSSVRow(null, null);
             }
         });
 
@@ -688,66 +666,6 @@ public class AngryGhidraProvider extends ComponentProvider {
         TFSolutions.add(solutionTF);
 
         CSOPanel.setLayout(gl_CSOPanel);
-    }
-
-    private void addRegisterRow() {
-        JTextField TFReg = addTextFieldToPanel(RegPanel, 1, GuiRegCounter);
-        TFregs.add(TFReg);
-
-        JTextField TFVal = addTextFieldToPanel(RegPanel, 2, GuiRegCounter);
-        TFVals.add(TFVal);
-
-        JButton btnDel = addButtonToPanel(delIcon, RegPanel, 0, GuiRegCounter++);
-        delButtons.add(btnDel);
-        btnDel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiRegCounter--;
-                RegPanel.remove(TFReg);
-                RegPanel.remove(TFVal);
-                RegPanel.remove(btnDel);
-                delButtons.remove(btnDel);
-                TFregs.remove(TFReg);
-                TFVals.remove(TFVal);
-                RegPanel.repaint();
-                RegPanel.revalidate();
-            }
-        });
-        RegPanel.repaint();
-        RegPanel.revalidate();
-    }
-
-    private void addSSVRow() {
-        IntegerTextField TFaddr = addIntegerTextFieldtoPanel(MemPanel, 1, GuiMemCounter);
-        TFaddr.setHexMode();
-        TFAddrs.add(TFaddr);
-
-        IntegerTextField TFlen = addIntegerTextFieldtoPanel(MemPanel, 2, GuiMemCounter);
-        TFLens.add(TFlen);
-
-        JTextField TFsol = addTextFieldToPanel(MemPanel, 3, GuiMemCounter);
-        TFsol.setEditable(false);
-        TFSolutions.add(TFsol);
-
-        JButton btnDel = addButtonToPanel(delIcon, MemPanel, 0, GuiMemCounter++);
-        delMem.add(btnDel);
-        btnDel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiMemCounter--;
-                MemPanel.remove(TFaddr.getComponent());
-                MemPanel.remove(TFlen.getComponent());
-                MemPanel.remove(TFsol);
-                MemPanel.remove(btnDel);
-                delMem.remove(btnDel);
-                TFAddrs.remove(TFaddr);
-                TFLens.remove(TFlen);
-                TFSolutions.remove(TFsol);
-                MemPanel.repaint();
-                MemPanel.revalidate();
-            }
-        });
-
-        MemPanel.repaint();
-        MemPanel.revalidate();
     }
 
     private void buildHookPanel() {
@@ -1591,6 +1509,76 @@ public class AngryGhidraProvider extends ComponentProvider {
         ErrorArea.setText("");
     }
 
+    private static void addArgumentRow(Integer length) {
+        IntegerTextField TFArg = addIntegerTextFieldtoPanel(ArgPanel, 1, GuiArgCounter);
+        if (length != null) {
+            TFArg.setValue(length);
+        }
+        TFArgs.add(TFArg);
+
+        JTextField TFArgSolution = addTextFieldToPanel(ArgPanel, 2, GuiArgCounter);
+        TFArgSolution.setEditable(false);
+        TFArgsSolutions.add(TFArgSolution);
+
+        JButton btnDel = addButtonToPanel(delIcon, ArgPanel, 0, GuiArgCounter++);
+        delArgs.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiArgCounter--;
+                ArgPanel.remove(TFArg.getComponent());
+                ArgPanel.remove(TFArgSolution);
+                ArgPanel.remove(btnDel);
+                delArgs.remove(btnDel);
+                TFArgs.remove(TFArg);
+                TFArgsSolutions.remove(TFArgSolution);
+                ArgPanel.repaint();
+                ArgPanel.revalidate();
+            }
+        });
+        ArgPanel.repaint();
+        ArgPanel.revalidate();
+    }
+
+    private void addSSVRow(Long address, Integer length) {
+        IntegerTextField TFaddr = addIntegerTextFieldtoPanel(MemPanel, 1, GuiMemCounter);
+        TFaddr.setHexMode();
+        if (address != null) {
+            TFaddr.setValue(address);
+        }
+        TFAddrs.add(TFaddr);
+
+        IntegerTextField TFlen = addIntegerTextFieldtoPanel(MemPanel, 2, GuiMemCounter);
+        if (length != null) {
+            TFlen.setValue(length);
+        }
+        TFLens.add(TFlen);
+
+        JTextField TFsol = addTextFieldToPanel(MemPanel, 3, GuiMemCounter);
+        TFsol.setEditable(false);
+        TFSolutions.add(TFsol);
+
+        JButton btnDel = addButtonToPanel(delIcon, MemPanel, 0, GuiMemCounter++);
+        delMem.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiMemCounter--;
+                MemPanel.remove(TFaddr.getComponent());
+                MemPanel.remove(TFlen.getComponent());
+                MemPanel.remove(TFsol);
+                MemPanel.remove(btnDel);
+                delMem.remove(btnDel);
+                TFAddrs.remove(TFaddr);
+                TFLens.remove(TFlen);
+                TFSolutions.remove(TFsol);
+                MemPanel.repaint();
+                MemPanel.revalidate();
+            }
+        });
+
+        MemPanel.repaint();
+        MemPanel.revalidate();
+    }
+
     public static void addWriteMemoryRow(Long address, BigInteger value) {
         IntegerTextField TFaddr = addIntegerTextFieldtoPanel(WMPanel, 1, GuiStoreCounter);
         TFaddr.setHexMode();
@@ -1623,6 +1611,38 @@ public class AngryGhidraProvider extends ComponentProvider {
         });
         WMPanel.repaint();
         WMPanel.revalidate();
+    }
+
+    private void addRegisterRow(String register, String value) {
+        JTextField TFReg = addTextFieldToPanel(RegPanel, 1, GuiRegCounter);
+        if (register != null) {
+            TFReg.setText(register);
+        }
+        TFregs.add(TFReg);
+
+        JTextField TFVal = addTextFieldToPanel(RegPanel, 2, GuiRegCounter);
+        if (value != null) {
+            TFVal.setText(value);
+        }
+        TFVals.add(TFVal);
+
+        JButton btnDel = addButtonToPanel(delIcon, RegPanel, 0, GuiRegCounter++);
+        delButtons.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiRegCounter--;
+                RegPanel.remove(TFReg);
+                RegPanel.remove(TFVal);
+                RegPanel.remove(btnDel);
+                delButtons.remove(btnDel);
+                TFregs.remove(TFReg);
+                TFVals.remove(TFVal);
+                RegPanel.repaint();
+                RegPanel.revalidate();
+            }
+        });
+        RegPanel.repaint();
+        RegPanel.revalidate();
     }
 
     @Override
