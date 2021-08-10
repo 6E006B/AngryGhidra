@@ -16,8 +16,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -83,8 +86,6 @@ public class AngryGhidraProvider extends ComponentProvider {
 
     // Arguments Panel vars
     private static JPanel ArgPanel;
-    private IntegerTextField TFArglen;
-    private JTextField TFArgsol;
     private static int GuiArgCounter;
     private static ArrayList < JButton > delArgs;
     private static ArrayList < IntegerTextField > TFArgs;
@@ -124,8 +125,6 @@ public class AngryGhidraProvider extends ComponentProvider {
     private JPanel OutputPanel;
     private ArrayList < JTextField > TFoutputFinds;
     private ArrayList < JTextField > TFoutputAvoids;
-    private JTextField TFOutputFind1;
-    private JTextField TFOutputAvoid1;
     private JTextArea OutputSolutionArea;
     private JScrollPane scrollOutputSolution;
     private int GuiOutputFindCounter;
@@ -413,10 +412,11 @@ public class AngryGhidraProvider extends ComponentProvider {
         JLabel lbSolArg = addLabelToPanel("Solution", ArgPanel, 2, 0);
         lbSolArg.setVisible(false);
 
-        TFArglen = addIntegerTextFieldtoPanel(ArgPanel, 1, 1);
+        IntegerTextField TFArglen = addIntegerTextFieldtoPanel(ArgPanel, 1, 1);
+        TFArgs.add(TFArglen);
         TFArglen.getComponent().setVisible(false);
 
-        TFArgsol = addTextFieldToPanel(ArgPanel, 2, 1);
+        JTextField TFArgsol = addTextFieldToPanel(ArgPanel, 2, 1);
         TFArgsol.setVisible(false);
         TFArgsol.setEditable(false);
         TFArgsSolutions.add(TFArgsol);
@@ -425,8 +425,6 @@ public class AngryGhidraProvider extends ComponentProvider {
             new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     if (chckbxArg.isSelected()) {
-                        TFArglen.getComponent().setVisible(true);
-                        TFArgsol.setVisible(true);
                         lbLenArg.setVisible(true);
                         lbSolArg.setVisible(true);
                         btnAddArg.setVisible(true);
@@ -440,8 +438,6 @@ public class AngryGhidraProvider extends ComponentProvider {
                             TFArgSolution.setVisible(true);
                         }
                     } else {
-                        TFArglen.getComponent().setVisible(false);
-                        TFArgsol.setVisible(false);
                         lbLenArg.setVisible(false);
                         lbSolArg.setVisible(false);
                         btnAddArg.setVisible(false);
@@ -812,12 +808,13 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         OutputFindPanel.setLayout(gbl_OutputFindPanel);
 
-        TFOutputFind1 = addTextFieldToPanel(OutputFindPanel, 1, 0);
+        JTextField TFOutputFind = addTextFieldToPanel(OutputFindPanel, 1, 0);
+        TFoutputFinds.add(TFOutputFind);
 
         JButton addButton = addButtonToPanel(addIcon, OutputFindPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addFindOutputRow();
+                addFindOutputRow(null);
             }
         });
 
@@ -839,58 +836,17 @@ public class AngryGhidraProvider extends ComponentProvider {
         };
         OutputAvoidPanel.setLayout(gbl_OutputAvoidPanel);
 
-        TFOutputAvoid1 = addTextFieldToPanel(OutputAvoidPanel, 1, 0);
+        JTextField TFOutputAvoid = addTextFieldToPanel(OutputAvoidPanel, 1, 0);
+        TFoutputAvoids.add(TFOutputAvoid);
 
         addButton = addButtonToPanel(addIcon, OutputAvoidPanel, 0, 0);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addAvoidOutputRow();
+                addAvoidOutputRow(null);
             }
         });
 
         OutputPanel.setLayout(gl_OutputPanel);
-    }
-
-    private void addFindOutputRow() {
-        JTextField TFOutputFind = addTextFieldToPanel(OutputFindPanel, 1, GuiOutputFindCounter);
-        TFoutputFinds.add(TFOutputFind);
-
-        JButton btnDel = addButtonToPanel(delIcon, OutputFindPanel, 0, GuiOutputFindCounter++);
-        delButtons.add(btnDel);
-        btnDel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiOutputFindCounter--;
-                OutputFindPanel.remove(TFOutputFind);
-                OutputFindPanel.remove(btnDel);
-                delButtons.remove(btnDel);
-                TFoutputFinds.remove(TFOutputFind);
-                OutputFindPanel.repaint();
-                OutputFindPanel.revalidate();
-            }
-        });
-        OutputFindPanel.repaint();
-        OutputFindPanel.revalidate();
-    }
-
-    private void addAvoidOutputRow() {
-        JTextField TFOutputAvoid = addTextFieldToPanel(OutputAvoidPanel, 1, GuiOutputAvoidCounter);
-        TFoutputAvoids.add(TFOutputAvoid);
-
-        JButton btnDel = addButtonToPanel(delIcon, OutputAvoidPanel, 0, GuiOutputAvoidCounter++);
-        delButtons.add(btnDel);
-        btnDel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiOutputAvoidCounter--;
-                OutputAvoidPanel.remove(TFOutputAvoid);
-                OutputAvoidPanel.remove(btnDel);
-                delButtons.remove(btnDel);
-                TFoutputAvoids.remove(TFOutputAvoid);
-                OutputAvoidPanel.repaint();
-                OutputAvoidPanel.revalidate();
-            }
-        });
-        OutputAvoidPanel.repaint();
-        OutputAvoidPanel.revalidate();
     }
 
     private void buildStatusPanel() {
@@ -967,13 +923,17 @@ public class AngryGhidraProvider extends ComponentProvider {
                 int result = fc.showOpenDialog(btnImport);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fc.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                    String path = selectedFile.getAbsolutePath();
+                    try {
+                        importConfiguration(path);
+                    } catch (IOException exception) {
+                        StatusLabel.setText("[X] Failed to load config from " + path + e.toString());
+                    }
                 }
             }
         });
         btnImport.setFont(new Font("SansSerif", Font.PLAIN, 12));
         btnImport.setIcon(importIcon);
-        btnImport.setEnabled(false);
 
         btnExport = new JButton("Export");
         btnExport.addActionListener(new ActionListener() {
@@ -1214,17 +1174,13 @@ public class AngryGhidraProvider extends ComponentProvider {
         }
 
         if (chckbxArg.isSelected()) {
-            if (TFArglen.getText().isEmpty() == false) {
-
-                JSONObject ArgDetails = new JSONObject();
-                ArgDetails.put("1", TFArglen.getText());
-                for (int i = 0; i < TFArgs.size(); i++) {
-                    if (TFArglen.getText().isEmpty() == false) {
-                        ArgDetails.put(Integer.toString(i + 2), TFArglen.getText());
-                    }
+            JSONObject ArgDetails = new JSONObject();
+            for (int i = 0; i < TFArgs.size(); i++) {
+                if (TFArgs.get(i).getText().isEmpty() == false) {
+                    ArgDetails.put(Integer.toString(i + 1), TFArgs.get(i).getText());
                 }
-                angr_options.put("Arguments", ArgDetails);
             }
+            angr_options.put("Arguments", ArgDetails);
         }
 
         JSONObject MemDetails = new JSONObject();
@@ -1272,27 +1228,21 @@ public class AngryGhidraProvider extends ComponentProvider {
             angr_options.put("Hooks", HookList);
         }
 
-        if (TFOutputFind1.getText().isEmpty() == false) {
-            JSONArray OutputFindDetails = new JSONArray();
-            OutputFindDetails.put(TFOutputFind1.getText());
-            for (int i = 0; i < TFoutputFinds.size(); i++) {
-                if (TFoutputFinds.get(i).getText().isEmpty() == false) {
-                    OutputFindDetails.put(TFoutputFinds.get(i).getText());
-                }
+        JSONArray OutputFindDetails = new JSONArray();
+        for (int i = 0; i < TFoutputFinds.size(); i++) {
+            if (TFoutputFinds.get(i).getText().isEmpty() == false) {
+                OutputFindDetails.put(TFoutputFinds.get(i).getText());
             }
-            angr_options.put("find_output", OutputFindDetails);
         }
+        angr_options.put("find_output", OutputFindDetails);
 
-        if (TFOutputAvoid1.getText().isEmpty() == false) {
-            JSONArray OutputAvoidDetails = new JSONArray();
-            OutputAvoidDetails.put(TFOutputAvoid1.getText());
-            for (int i = 0; i < TFoutputAvoids.size(); i++) {
-                if (TFoutputAvoids.get(i).getText().isEmpty() == false) {
-                    OutputAvoidDetails.put(TFoutputAvoids.get(i).getText());
-                }
+        JSONArray OutputAvoidDetails = new JSONArray();
+        for (int i = 0; i < TFoutputAvoids.size(); i++) {
+            if (TFoutputAvoids.get(i).getText().isEmpty() == false) {
+                OutputAvoidDetails.put(TFoutputAvoids.get(i).getText());
             }
-            angr_options.put("avoid_output", OutputAvoidDetails);
         }
+        angr_options.put("avoid_output", OutputAvoidDetails);
 
         String binary_path = ThisProgram.getExecutablePath();
 
@@ -1312,6 +1262,125 @@ public class AngryGhidraProvider extends ComponentProvider {
         panel.revalidate();
 
         return angr_options;
+    }
+
+    private void importConfiguration(String path) throws IOException {
+        // resetFields();
+        String content = new String(Files.readAllBytes(Paths.get(path)));
+        JSONObject config = new JSONObject(content);
+
+        if (config.has("auto_load_libs") && config.getBoolean("auto_load_libs")) {
+            chckbxAutoloadlibs.setSelected(true);
+        } else {
+            chckbxAutoloadlibs.setSelected(false);
+        }
+        if (config.has("blank_state")) {
+            chckbxBlankState.setSelected(true);
+            TFBlankState.setText(config.getString("blank_state"));
+        } else {
+            chckbxBlankState.setSelected(false);
+        }
+        if (config.has("find")) {
+            TFFind.setText(config.getString("find"));
+        }
+        if (config.has("avoid")) {
+            chckbxAvoidAddresses.setSelected(true);
+            textArea.setText(config.getString("avoid"));
+        } else {
+            chckbxAvoidAddresses.setSelected(false);
+        }
+
+        if (config.has("Arguments")) {
+            chckbxArg.setSelected(true);
+            JSONObject arguments = config.getJSONObject("Arguments");
+            arguments.keySet().forEach(index -> {
+                Integer length = Integer.parseInt(arguments.getString(index));
+                int size = TFArgs.size();
+                if (size > 0 && TFArgs.get(size-1).getText().isEmpty()) {
+                    TFArgs.get(size-1).setValue(length);
+                } else {
+                    addArgumentRow(length);
+                }
+            });
+        } else {
+            chckbxArg.setSelected(false);
+        }
+
+        if (config.has("Memory")) {
+            JSONObject memory = config.getJSONObject("Memory");
+            memory.keySet().forEach(addressString -> {
+                Integer length = Integer.parseInt(memory.getString(addressString));
+                Long address = Long.decode((String)addressString);
+                int size = TFAddrs.size();
+                if (size > 0 && TFAddrs.get(size-1).getText().isEmpty() && TFLens.get(size-1).getText().isEmpty()) {
+                    TFAddrs.get(size-1).setValue(address);
+                    TFLens.get(size-1).setValue(length);
+                } else {
+                    addSSVRow(address, length);
+                }
+            });
+        }
+
+        if (config.has("Store")) {
+            JSONObject store = config.getJSONObject("Store");
+            store.keySet().forEach(addressString -> {
+                String valueString = store.getString(addressString);
+                BigInteger value;
+                if (valueString.startsWith("0x")) {
+                    value = new BigInteger(valueString.substring(2), 16);
+                } else {
+                    value = new BigInteger(valueString);
+                }
+                Long address = Long.decode((String)addressString);
+                int size = TFStoreAddrs.size();
+                if (size > 0 && TFStoreAddrs.get(size-1).getText().isEmpty() && TFStoreVals.get(size-1).getText().isEmpty()) {
+                    TFStoreAddrs.get(size-1).setValue(address);
+                    TFStoreVals.get(size-1).setValue(value);
+                } else {
+                    addWriteMemoryRow(address, value);
+                }
+            });
+        }
+
+        if (config.has("Registers")) {
+            JSONObject registers = config.getJSONObject("Registers");
+            registers.keySet().forEach(register -> {
+                String value = registers.getString(register);
+                int size = TFregs.size();
+                if (size > 0 && TFregs.get(size-1).getText().isEmpty() && TFVals.get(size-1).getText().isEmpty()) {
+                    TFregs.get(size-1).setText(register);
+                    TFVals.get(size-1).setText(value);
+                } else {
+                    addRegisterRow(register, value);
+                }
+            });
+        }
+
+        if (config.has("find_output")) {
+            JSONArray outputs = config.getJSONArray("find_output");
+            for (int i=0; i < outputs.length(); i++) {
+                String output = outputs.getString(i);
+                int size = TFoutputFinds.size();
+                if (size > 0 && TFoutputFinds.get(size-1).getText().isEmpty()) {
+                    TFoutputFinds.get(size-1).setText(output);
+                } else {
+                    addFindOutputRow(output);
+                }
+            }
+        }
+
+        if (config.has("avoid_output")) {
+            JSONArray outputs = config.getJSONArray("avoid_output");
+            for (int i=0; i < outputs.length(); i++) {
+                String output = outputs.getString(i);
+                int size = TFoutputAvoids.size();
+                if (size > 0 && TFoutputAvoids.get(size-1).getText().isEmpty()) {
+                    TFoutputAvoids.get(size-1).setText(output);
+                } else {
+                    addAvoidOutputRow(output);
+                }
+            }
+        }
     }
 
     protected void ANGRinProgress(File angrfile) {
@@ -1643,6 +1712,54 @@ public class AngryGhidraProvider extends ComponentProvider {
         });
         RegPanel.repaint();
         RegPanel.revalidate();
+    }
+
+    private void addFindOutputRow(String output) {
+        JTextField TFOutputFind = addTextFieldToPanel(OutputFindPanel, 1, GuiOutputFindCounter);
+        if (output != null) {
+            TFOutputFind.setText(output);
+        }
+        TFoutputFinds.add(TFOutputFind);
+
+        JButton btnDel = addButtonToPanel(delIcon, OutputFindPanel, 0, GuiOutputFindCounter++);
+        delButtons.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiOutputFindCounter--;
+                OutputFindPanel.remove(TFOutputFind);
+                OutputFindPanel.remove(btnDel);
+                delButtons.remove(btnDel);
+                TFoutputFinds.remove(TFOutputFind);
+                OutputFindPanel.repaint();
+                OutputFindPanel.revalidate();
+            }
+        });
+        OutputFindPanel.repaint();
+        OutputFindPanel.revalidate();
+    }
+
+    private void addAvoidOutputRow(String output) {
+        JTextField TFOutputAvoid = addTextFieldToPanel(OutputAvoidPanel, 1, GuiOutputAvoidCounter);
+        if (output != null) {
+            TFOutputAvoid.setText(output);
+        }
+        TFoutputAvoids.add(TFOutputAvoid);
+
+        JButton btnDel = addButtonToPanel(delIcon, OutputAvoidPanel, 0, GuiOutputAvoidCounter++);
+        delButtons.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiOutputAvoidCounter--;
+                OutputAvoidPanel.remove(TFOutputAvoid);
+                OutputAvoidPanel.remove(btnDel);
+                delButtons.remove(btnDel);
+                TFoutputAvoids.remove(TFOutputAvoid);
+                OutputAvoidPanel.repaint();
+                OutputAvoidPanel.revalidate();
+            }
+        });
+        OutputAvoidPanel.repaint();
+        OutputAvoidPanel.revalidate();
     }
 
     @Override
