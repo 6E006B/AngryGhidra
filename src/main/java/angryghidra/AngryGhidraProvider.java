@@ -1306,6 +1306,25 @@ public class AngryGhidraProvider extends ComponentProvider {
             chckbxArg.setSelected(false);
         }
 
+        if (config.has("Hooks")) {
+            JSONArray hooks = config.getJSONArray("Hooks");
+            for (int i=0; i < hooks.length(); i++) {
+                JSONObject hook = hooks.getJSONObject(i);
+                if (hook.has("address") && hook.has("length") && hook.has("registers")) {
+                    String address = hook.getString("address");
+                    String length = hook.getString("length");
+                    JSONObject registersDict = hook.getJSONObject("registers");
+                    String[][] registers = new String[2][registersDict.length()];
+                    int counter = 0;
+                    for (String reg: registersDict.keySet()) {
+                        registers[counter][0] = reg;
+                        registers[counter++][1] = registersDict.getString(reg);
+                    }
+                    addHook(address, length, registers);
+                }
+            }
+        }
+
         if (config.has("Memory")) {
             JSONObject memory = config.getJSONObject("Memory");
             memory.keySet().forEach(addressString -> {
@@ -1606,6 +1625,33 @@ public class AngryGhidraProvider extends ComponentProvider {
         });
         ArgPanel.repaint();
         ArgPanel.revalidate();
+    }
+
+    public static void addHook(String address, String length, String[][] registers) {
+        String[] options = new String[2];
+        options[0] = address;
+        options[1] = length;
+
+        Hook.put(options, registers);
+
+        JLabel lbHook = addLabelToPanel("Hook at " + address, RegHookPanel, 1, GuiHookCounter);
+
+        JButton btnDel = addButtonToPanel(delIcon, RegHookPanel, 0, GuiHookCounter++);
+        delHooks.add(btnDel);
+        btnDel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                AngryGhidraProvider.Hook.remove(options, registers);
+                AngryGhidraProvider.GuiHookCounter--;
+                AngryGhidraProvider.RegHookPanel.remove(lbHook);
+                AngryGhidraProvider.RegHookPanel.remove(btnDel);
+                AngryGhidraProvider.delHooks.remove(btnDel);
+                AngryGhidraProvider.lbHooks.remove(lbHook);
+                AngryGhidraProvider.RegHookPanel.repaint();
+                AngryGhidraProvider.RegHookPanel.revalidate();
+            }
+        });
+        AngryGhidraProvider.RegHookPanel.repaint();
+        AngryGhidraProvider.RegHookPanel.revalidate();
     }
 
     private void addSSVRow(Long address, Integer length) {
