@@ -1213,17 +1213,17 @@ public class AngryGhidraProvider extends ComponentProvider {
             for (Entry < String[], String[][] > entry: Hook.entrySet()) {
                 JSONObject HookDetails = new JSONObject();
                 String[] HookOptions = entry.getKey();
-                String HookAddress = HookOptions[0];
-                HookDetails.put("Length", HookOptions[1]);
+                HookDetails.put("address", HookOptions[0]);
+                HookDetails.put("length", HookOptions[1]);
+                JSONObject registers = new JSONObject();
                 String[][] Regs = entry.getValue();
                 for (int i = 0; i < Regs[0].length; i++) {
                     if (Regs[0][i] != null & Regs[1][i] != null) {
-                        HookDetails.put(Regs[0][i], Regs[1][i]);
+                        registers.put(Regs[0][i], Regs[1][i]);
                     }
                 }
-                JSONObject NewHook = new JSONObject();
-                NewHook.put(HookAddress, HookDetails);
-                HookList.put(NewHook);
+                HookDetails.put("registers", registers);
+                HookList.put(HookDetails);
             }
             angr_options.put("Hooks", HookList);
         }

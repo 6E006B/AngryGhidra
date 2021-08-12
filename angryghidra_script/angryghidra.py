@@ -10,21 +10,18 @@ SYMVECTORS = []
 
 
 def hook_function(state):
-    for object in EXPLORE_OPT["Hooks"]:
-        for frame in object.items():
-            if frame[0] == str(hex(state.solver.eval(state.regs.ip))):
-                for option, data in frame[1].items():
-                    if "sv" in data:
-                        symbvector_length = int(data[2:], 0)
-                        symbvector = claripy.BVS('symvector', symbvector_length * 8)
-                        SYMVECTORS.append(symbvector)
-                        data = symbvector
-                    else:
-                        data = int(str(data), 0)
-                    for REG in REGISTERS:
-                        if REG == option:
-                            setattr(state.regs, option, data)
-                            break
+    for hook in EXPLORE_OPT["Hooks"]:
+        if hook["address"] == str(hex(state.solver.eval(state.regs.ip))):
+            for option, data in hook["registers"].items():
+                if "sv" in data:
+                    symbvector_length = int(data[2:], 0)
+                    symbvector = claripy.BVS('symvector', symbvector_length * 8)
+                    SYMVECTORS.append(symbvector)
+                    data = symbvector
+                else:
+                    data = int(str(data), 0)
+                if option in REGISTERS:
+                    setattr(state.regs, option, data)
 
 
 def main(file):
@@ -128,15 +125,8 @@ def main(file):
 
     # Handle Hooks
     if "Hooks" in EXPLORE_OPT:
-        for object in EXPLORE_OPT["Hooks"]:
-            for frame in object.items():
-                hook_address = frame[0]
-                for option, data in frame[1].items():
-                    data = int(str(data), 0)
-                    if option == "Length":
-                        hook_length = data
-                        break
-                p.hook(int(hook_address, 16), hook_function, length=hook_length)
+        for hook in EXPLORE_OPT["Hooks"]:
+            p.hook(int(hook["address"], 16), hook_function, length=hook["length"])
 
     simgr = p.factory.simulation_manager(state)
     simgr.use_technique(angr.exploration_techniques.Explorer(find=find_function, avoid=avoid_function))
