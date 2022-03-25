@@ -673,7 +673,7 @@ public class AngryGhidraProvider extends ComponentProvider {
         JButton btnAddHook = new JButton("Add Hook");
         btnAddHook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                HookCreation window = new HookCreation();
+                HookCreation window = new HookCreation(null);
                 window.main();
             }
         });
@@ -1441,10 +1441,12 @@ public class AngryGhidraProvider extends ComponentProvider {
             }
 
             private void setArgvSolution(JSONObject solutionObject) {
-                JSONArray argv = solutionObject.getJSONArray("argv");
-                if (argv != null && argv.isEmpty() == false) {
-                    for (int i=0; i < argv.length(); ++i) {
-                        TFArgsSolutions.get(i).setText(argv.getString(i));
+                if(solutionObject.has("argv")) {
+                    JSONArray argv = solutionObject.getJSONArray("argv");
+                    if (argv != null && argv.isEmpty() == false) {
+                        for (int i=0; i < argv.length(); ++i) {
+                            TFArgsSolutions.get(i).setText(argv.getString(i));
+                        }
                     }
                 }
             }

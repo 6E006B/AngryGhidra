@@ -102,7 +102,7 @@ public class AngryGhidraPopupMenu extends ListingContextAction {
                 CurrentBlankAddr = address;
                 SetColor(address, Color.CYAN);
                 AngryGhidraProvider.chckbxBlankState.setSelected(true);
-               AngryGhidraProvider.TFBlankState.setText("0x" + address.toString());
+                AngryGhidraProvider.TFBlankState.setText("0x" + address.toString());
             }
         };
 
@@ -221,6 +221,23 @@ public class AngryGhidraPopupMenu extends ListingContextAction {
                 "Apply Patched Bytes"}, null, Group_Name));
         tool.addAction(ApplyPatchedBytes);
 
+        ListingContextAction SetHook = new ListingContextAction("Create Hook", getName()) {
+            @Override
+            protected void actionPerformed(ListingActionContext context) {
+                Address address = context.getLocation().getAddress();
+                SetColor(address, Color.BLUE);
+                // HookCreation hookCreationWindow = new HookCreation("0x" + address.toString());
+                // TODO derive length. does anything > 1 make sense?
+                HookCreation.show("0x" + address.toString());
+            }
+        };
+
+        SetHook.setPopupMenuData(new MenuData(new String[] {
+            MenuName,
+            "Set",
+            "Hook Address"
+        }, null, Group_Name));
+        tool.addAction(SetHook);
     }
 
     public static void UnSetColor(Address address) {

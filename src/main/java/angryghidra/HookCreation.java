@@ -40,7 +40,7 @@ public class HookCreation {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    HookCreation window = new HookCreation();
+                    HookCreation window = new HookCreation(null);
                     window.Hookframe.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -49,11 +49,24 @@ public class HookCreation {
         });
     }
 
-    public HookCreation() {
-        initialize();
+    public static void show(String address) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    HookCreation window = new HookCreation(address);
+                    window.Hookframe.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    private void initialize() {
+    public HookCreation(String address) {
+        initialize(address);
+    }
+
+    private void initialize(String address) {
         Hookframe = new JFrame();
         Hookframe.getContentPane().setMinimumSize(new Dimension(500, 333));
         Hookframe.setTitle("Add hook");
@@ -71,11 +84,11 @@ public class HookCreation {
 
         TFAddress = new IntegerTextField();
         TFAddress.setHexMode();
-        GridBagConstraints gbc_TFAddress = new GridBagConstraints();
-        gbc_TFAddress.anchor = GridBagConstraints.NORTH;
-        gbc_TFAddress.fill = GridBagConstraints.HORIZONTAL;
-        gbc_TFAddress.gridx = 0;
-        gbc_TFAddress.gridy = 1;
+        if (address != null) {
+            TFAddress.setValue(Long.decode(address));
+        } else {
+            TFAddress.setValue(Long.decode("0x1337"));
+        }
 
         JButton btnCreate = new JButton("Add");
         btnCreate.setFont(new Font("SansSerif", Font.PLAIN, 12));
@@ -277,8 +290,6 @@ public class HookCreation {
         gbc_lbAddress.gridy = 0;
         AddrPanel.add(lbAddress, gbc_lbAddress);
 
-        TFAddress = new IntegerTextField();
-        TFAddress.setHexMode();
         GridBagConstraints gbc_AddrPanel = new GridBagConstraints();
         gbc_AddrPanel.fill = GridBagConstraints.HORIZONTAL;
         gbc_AddrPanel.gridx = 0;
@@ -296,6 +307,7 @@ public class HookCreation {
 
         TFLength = new IntegerTextField();
         TFLength.setDecimalMode();
+        TFLength.setValue(1);
         GridBagConstraints gbc_TFLength = new GridBagConstraints();
         gbc_TFLength.fill = GridBagConstraints.HORIZONTAL;
         gbc_TFLength.gridx = 0;
