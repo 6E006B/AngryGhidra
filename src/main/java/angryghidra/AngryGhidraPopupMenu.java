@@ -74,12 +74,10 @@ public class AngryGhidraPopupMenu extends ListingContextAction {
 
             @Override
             protected void actionPerformed(ListingActionContext context) {
-
                 Address address = context.getLocation().getAddress();
                 UnSetColor(address);
                 CurrentFindAddr = null;
                AngryGhidraProvider.TFFind.setText("");
-
             }
         };
 
