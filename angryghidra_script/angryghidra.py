@@ -2,6 +2,7 @@ import sys
 import angr
 import claripy
 import json
+from math import ceil
 import time
 
 EXPLORE_OPT = {}  # Explore options
@@ -105,8 +106,8 @@ def main(file):
         for addr, value in EXPLORE_OPT["Store"].items():
             store_addr = int(addr, 16)
             store_value = int(value, 16)
-            store_length = len(value) - 2
-            state.memory.store(store_addr, state.solver.BVV(store_value, 4 * store_length))
+            store_length = ceil((len(value) - 2) / 2) if value.startswith("0x") else max(1, ceil(store_value / 8))
+            state.memory.store(store_addr, state.solver.BVV(store_value, 8 * store_length))
 
     # Handle Symbolic Registers
     if "Registers" in EXPLORE_OPT:
@@ -126,7 +127,7 @@ def main(file):
     # Handle Hooks
     if "Hooks" in EXPLORE_OPT:
         for hook in EXPLORE_OPT["Hooks"]:
-            p.hook(int(hook["address"], 16), hook_function, length=hook["length"])
+            p.hook(int(hook["address"], 16), hook_function, length=int(hook["length"]))
 
     simgr = p.factory.simulation_manager(state)
     simgr.use_technique(angr.exploration_techniques.Explorer(find=find_function, avoid=avoid_function))
