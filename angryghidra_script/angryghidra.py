@@ -163,11 +163,10 @@ def main(file):
 
         found_stdins = found_path.posix.stdin.content
         if len(found_stdins) > 0:
-            solution["stdin"] = {}
-            std_id = 1
+            stdin_bytes = b""
             for stdin in found_stdins:
-                solution["stdin"][std_id] = str(found_path.solver.eval(stdin[0], cast_to=bytes))
-                std_id += 1
+                stdin_bytes += found_path.solver.eval(stdin[0], cast_to=bytes)
+            solution["stdin"] = stdin_bytes.decode("utf8")
         if found_path.posix.stdout.content:
             solution["stdout"] = found_path.posix.dumps(1).decode('utf8')
     print(json.dumps(solution))
