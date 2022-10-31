@@ -130,9 +130,7 @@ def main(file):
             p.hook(int(hook["address"], 16), hook_function, length=int(hook["length"]))
 
     simgr = p.factory.simulation_manager(state)
-    simgr.use_technique(angr.exploration_techniques.Explorer(find=find_function, avoid=avoid_function))
-
-    simgr.run()
+    simgr.explore(find=find_function, avoid=avoid_function)
 
     solution = {}
     if simgr.found:
